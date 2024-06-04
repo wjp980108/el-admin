@@ -34,7 +34,10 @@ module.exports = {
         value: 'build',
         name: 'build:    构建相关 | Changes that affect the build system or external dependencies'
       },
-      { value: 'ci', name: 'ci:       持续集成 | Changes to our CI configuration files and scripts' },
+      {
+        value: 'ci',
+        name: 'ci:       持续集成 | Changes to our CI configuration files and scripts'
+      },
       { value: 'revert', name: 'revert:   回退代码 | Revert to a commit' },
       {
         value: 'chore',
@@ -44,11 +47,26 @@ module.exports = {
     // 是否开启emoji表情
     useEmoji: false,
     // 自定义“模块范围”列表
-    scopes: ['pages', 'components', 'utils', 'hooks', 'styles', 'config', 'assets', 'types', 'test', 'docs', 'other'],
+    scopes: [
+      'pages',
+      'components',
+      'utils',
+      'hooks',
+      'styles',
+      'config',
+      'assets',
+      'types',
+      'test',
+      'docs',
+      'other'
+    ],
     // 是否在选择“模块范围”中显示“自定义（custom）”选项
     allowCustomScopes: false,
     // 是否在选择“模块范围”中显示“空（empty）”选项
     allowEmptyScopes: false,
-    allowBreakingChanges: ['feat', 'fix', 'chore']
+    // 允许出现的非兼容性重大的变更的 type
+    allowBreakingChanges: ['feat', 'fix', 'refactor', 'chore'],
+    // 定义 header 长度
+    maxHeaderLength: 79
   }
 }
