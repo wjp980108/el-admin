@@ -34,6 +34,7 @@ module.exports = {
         value: 'build',
         name: 'build:    构建相关 | Changes that affect the build system or external dependencies'
       },
+      { value: 'ci', name: 'ci:       持续集成 | Changes to our CI configuration files and scripts' },
       { value: 'revert', name: 'revert:   回退代码 | Revert to a commit' },
       {
         value: 'chore',
