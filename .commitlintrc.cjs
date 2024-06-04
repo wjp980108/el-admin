@@ -41,6 +41,14 @@ module.exports = {
         name: 'chore:    其他修改 | Other changes that do not modify src or test files'
       }
     ],
-    useEmoji: false
+    // 是否开启emoji表情
+    useEmoji: false,
+    // 自定义“模块范围”列表
+    scopes: ['pages', 'components', 'utils', 'hooks', 'styles', 'config', 'assets', 'types', 'test', 'docs', 'other'],
+    // 是否在选择“模块范围”中显示“自定义（custom）”选项
+    allowCustomScopes: false,
+    // 是否在选择“模块范围”中显示“空（empty）”选项
+    allowEmptyScopes: false,
+    allowBreakingChanges: ['feat', 'fix', 'chore']
   }
 }
