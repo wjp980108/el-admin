@@ -11,7 +11,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "cz": "czg"
   },
   "dependencies": {
     "@unocss/reset": "^0.60.3",
@@ -30,6 +31,8 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/test-utils": "^2.4.5",
     "@vue/tsconfig": "^0.5.1",
+    "cz-git": "^1.9.2",
+    "czg": "^1.9.2",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
     "jsdom": "^24.0.0",
@@ -41,5 +44,10 @@
     "vite-plugin-vue-devtools": "^7.0.25",
     "vitest": "^1.4.0",
     "vue-tsc": "^2.0.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
   }
 }
