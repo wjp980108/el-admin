@@ -4,6 +4,7 @@ module.exports = {
   rules: {
     // @see: https://commitlint.js.org/#/reference-rules
   },
+  extends: ['@commitlint/config-conventional'],
   prompt: {
     messages: {
       type: '选择你要提交的类型 :',
