@@ -1,9 +1,0 @@
-node_modules
-public
-dist
-src/assets
-
-
-.idea
-.vscode
-.husky
