@@ -1,0 +1,28 @@
+export const staticRoutes: AppRoute.RowRoute[] = [
+  {
+    name: 'settings',
+    path: '/settings',
+    title: '设置中心',
+    icon: 'icon-park-outline:setting',
+    keepAlive: true,
+    hide: false,
+    withoutTab: true,
+    menuType: 'dir',
+    componentPath: null,
+    id: 1,
+    pid: null,
+  },
+  {
+    name: 'mechanism',
+    path: '/settings/mechanism',
+    title: '组织机构',
+    icon: 'icon-park-outline:every-user',
+    keepAlive: true,
+    hide: false,
+    withoutTab: true,
+    menuType: 'page',
+    componentPath: '/settings/mechanism/index.vue',
+    id: 2,
+    pid: 1,
+  },
+]

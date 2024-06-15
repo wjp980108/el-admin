@@ -1,15 +1,19 @@
-import '@unocss/reset/normalize.css'
-
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
-import App from './App.vue'
-import router from './router'
+import '@unocss/reset/normalize.css'
 import 'virtual:uno.css'
+import App from './App.vue'
+import { installRouter } from '@/router'
+import { installPinia } from '@/stores'
 
-const app = createApp(App)
+async function setupApp() {
+  // 创建vue实例
+  const app = createApp(App)
+  // 注册模块 Pinia
+  installPinia(app)
+  // 注册模块 Vue-router
+  await installRouter(app)
 
-app.use(createPinia())
-app.use(router)
+  app.mount('#app')
+}
 
-app.mount('#app')
+setupApp().then()

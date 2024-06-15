@@ -15,8 +15,14 @@ export default {
       confirmCommit: '是否提交commit ?',
     },
     types: [
-      { value: 'feat', name: 'feat:     新增功能 | A new feature' },
-      { value: 'fix', name: 'fix:      修复缺陷 | A bug fix' },
+      {
+        value: 'feat',
+        name: 'feat:     新增功能 | A new feature',
+      },
+      {
+        value: 'fix',
+        name: 'fix:      修复缺陷 | A bug fix',
+      },
       {
         value: 'style',
         name: 'style:    代码格式 | Changes that do not affect the meaning of the code',
@@ -37,7 +43,10 @@ export default {
         value: 'ci',
         name: 'ci:       持续集成 | Changes to our CI configuration files and scripts',
       },
-      { value: 'revert', name: 'revert:   回退代码 | Revert to a commit' },
+      {
+        value: 'revert',
+        name: 'revert:   回退代码 | Revert to a commit',
+      },
       {
         value: 'chore',
         name: 'chore:    其他修改 | Other changes that do not modify src or test files',

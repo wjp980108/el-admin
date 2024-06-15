@@ -17,8 +17,12 @@ export default defineConfig({
     VueDevTools(),
     UnoCSS(),
     AutoImport({
+      dts: 'src/typings/auto-imports.d.ts',
       imports: [
         'vue',
+        'vue-router',
+        'pinia',
+        '@vueuse/core',
         {
           'naive-ui': [
             'useDialog',
@@ -30,6 +34,7 @@ export default defineConfig({
       ],
     }),
     Components({
+      dts: 'src/typings/components.d.ts',
       resolvers: [NaiveUiResolver()],
     }),
   ],
