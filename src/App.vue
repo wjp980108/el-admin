@@ -7,7 +7,7 @@ const naiveLocale = computed(() => {
 </script>
 
 <template>
-  <n-config-provider :locale="naiveLocale.locale" :date-locale="naiveLocale.dateLocale">
+  <n-config-provider class="wh-full" :locale="naiveLocale.locale" :date-locale="naiveLocale.dateLocale">
     <router-view />
   </n-config-provider>
 </template>

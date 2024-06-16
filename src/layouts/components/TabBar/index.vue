@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineOptions({ name: 'LayoutTab' })
+defineOptions({ name: 'TabBar' })
 </script>
 
 <template>

@@ -3,6 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import { RouterLink } from 'vue-router'
 import type { MenuOption } from 'naive-ui'
 import { arrayToTree, renderIcon } from '@/utils'
+import Layout from '@/layouts/index.vue'
 
 const metaFields: AppRoute.MetaKeys[] = ['title', 'icon', 'requiresAuth', 'roles', 'keepAlive', 'hide', 'order', 'href', 'activeMenu', 'withoutTab', 'pinTab', 'menuType']
 
@@ -42,8 +43,13 @@ export function createRoutes(routes: AppRoute.RowRoute[]) {
   // 路由配置对应组件路径，有重定向的路由无需配置
   const modules = import.meta.glob('@/views/**/*.vue')
   resultRouter = resultRouter.map((item: AppRoute.Route) => {
-    if (item.componentPath && !item.redirect)
+    if (item.componentPath && !item.redirect) {
       item.component = modules[`/src/views${item.componentPath}`]
+    }
+    else {
+      item.component = Layout
+    }
+
     return item
   })
 
@@ -119,8 +125,24 @@ export function createMenus(userRoutes: AppRoute.RowRoute[]) {
   // 不需要显示的过滤菜单
   const visibleMenus = resultMenus.filter(route => !route.meta.hide)
 
+  // 默认有一个首页
+  const target: MenuOption = {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            path: '/home',
+          },
+        },
+        { default: () => '首页' },
+      ),
+    key: '/home',
+    icon: renderIcon('icon-park-outline:home'),
+  }
+
   // 生成侧边菜单
-  return arrayToTree(transformAuthRoutesToMenus(visibleMenus))
+  return arrayToTree([target, ...transformAuthRoutesToMenus(visibleMenus)])
 }
 
 /**

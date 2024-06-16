@@ -29,6 +29,22 @@ export async function installRouter(app: App) {
     next()
   })
 
+  router.beforeResolve((to) => {
+    // 设置菜单高亮
+    routeStore.setActiveMenu((to.meta.activeMenu as string) ?? to.fullPath)
+    // // 添加tabs
+    // tabStore.addTab(to)
+    // // 设置高亮标签;
+    // tabStore.setCurrentTab(to.path as string)
+  })
+
+  router.afterEach((to) => {
+    // 修改网页标题
+    document.title = `${to.meta.title} - ${import.meta.env.VITE_APP_NAME}`
+    // // 结束 loadingBar
+    // appStore.showProgress && window.$loadingBar?.finish()
+  })
+
   app.use(router)
 
   await router.isReady()

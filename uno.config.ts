@@ -1,5 +1,6 @@
 import { defineConfig } from 'unocss'
 
+// https://github.com/unocss/unocss
 export default defineConfig({
   shortcuts: {
     'wh-full': 'w-full h-full',

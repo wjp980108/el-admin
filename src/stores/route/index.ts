@@ -53,8 +53,13 @@ export const useRouteStore = defineStore('route', () => {
     state.value.isInitAuthRoute = true
   }
 
+  const setActiveMenu = (key: string) => {
+    state.value.activeMenu = key
+  }
+
   return {
     ...toRefs(state.value),
     initAuthRoute,
+    setActiveMenu,
   }
 })
