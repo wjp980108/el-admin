@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { useRouteStore } from '@/stores'
 
-defineOptions({ name: 'LayoutSider' })
 const routeStore = useRouteStore()
+routeStore.initAuthRoute()
 </script>
 
 <template>
-  <n-layout-sider>
-    <n-menu :options="routeStore.state.menus" />
-  </n-layout-sider>
+  <div>登录{{ routeStore.isInitAuthRoute }}</div>
 </template>
 
 <style scoped>

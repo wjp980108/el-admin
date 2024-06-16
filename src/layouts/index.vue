@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LayoutSider from '@/layouts/components/Sider/index.vue'
+import LayoutSider from '@/layouts/components/Side/index.vue'
 import LayoutHeader from '@/layouts/components/Header/index.vue'
 import LayoutTab from '@/layouts/components/Tab/index.vue'
 
