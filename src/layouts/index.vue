@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import SideMenu from '@/layouts/components/SideMenu/index.vue'
-import TabBar from '@/layouts/components/TabBar/index.vue'
+import TabBar from '@/layouts/components/TagBar/index.vue'
 import AppHeader from '@/layouts/components/AppHeader/index.vue'
 
 defineOptions({ name: 'Layout' })
 </script>
 
 <template>
-  <n-layout class="wh-full" has-sider embedded>
+  <n-layout class="wh-full" embedded has-sider>
     <SideMenu />
     <n-layout>
       <n-layout-header bordered>

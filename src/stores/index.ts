@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 
 export * from './route/index'
 export * from './app/index'
+export * from './tag'
 
 export function installPinia(app: App) {
   const pinia = createPinia()

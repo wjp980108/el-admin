@@ -3,7 +3,7 @@ defineOptions({ name: 'AppWrapper' })
 </script>
 
 <template>
-  <n-el class="el p-3 cursor-pointer rounded" tag="div">
+  <n-el class="el cursor-pointer rounded p-3" tag="div">
     <n-flex class="h-full" align="center">
       <slot />
     </n-flex>
