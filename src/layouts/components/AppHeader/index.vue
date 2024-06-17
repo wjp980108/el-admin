@@ -11,9 +11,9 @@ const appStore = useAppStore()
 </script>
 
 <template>
-  <div class="h-60px flex-y-center justify-between b-b b-b-solid b-b-#EFEFF5">
+  <div class="h-60px flex-y-center justify-between b-(b b-#EFEFF5 b-solid)">
     <div>left</div>
-    <div class="flex-y-center gap-1 h-full p-x-xl">
+    <div class="h-full flex-y-center gap-1 p-x-xl">
       <AppSearch />
       <n-tooltip>
         <template #trigger>
