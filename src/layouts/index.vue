@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SideMenu from '@/layouts/components/SideMenu/index.vue'
-import LayoutHeader from '@/layouts/components/Header/index.vue'
 import TabBar from '@/layouts/components/TabBar/index.vue'
+import AppHeader from '@/layouts/components/AppHeader/index.vue'
 
 defineOptions({ name: 'Layout' })
 </script>
@@ -11,7 +11,7 @@ defineOptions({ name: 'Layout' })
     <SideMenu />
     <n-layout>
       <n-layout-header bordered>
-        <LayoutHeader />
+        <AppHeader />
         <TabBar />
       </n-layout-header>
       <n-layout-content>
