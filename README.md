@@ -46,7 +46,6 @@ dayjs: DayJS 是一个极简主义的 JavaScript 库，它是用于解析、验�
 jszip: Jszip 是一个使用JavaScript创建、读取和编辑.zip文件的库
 file-saver: FileSaverJS 是在客户端保存文件的解决方案，非常适合在客户端生成文件的web应用程序
 sortablejs: SortableJS 是一个功能强大的JavaScript 拖拽库
-nprogress: NProgress 是一个轻量级的进度条组件
 qs: QS 是一个专业的前端数据格式处理工具
 localForage: 是一个快速且简单的 JavaScript 存储库。localForage 通过使用异步存储（IndexedDB 或 WebSQL）和简单的 API 来改善 Web 应用程序的离线体验localStorage
 ```
