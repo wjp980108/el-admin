@@ -4,7 +4,7 @@ import { Icon } from '@iconify/vue'
 defineOptions({ name: 'AppIcon' })
 
 withDefaults(defineProps<IconProps>(), {
-  size: 18,
+  size: 16,
 })
 
 interface IconProps {

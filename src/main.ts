@@ -1,7 +1,5 @@
 import { createApp } from 'vue'
-import '@unocss/reset/normalize.css'
-import 'virtual:uno.css'
-import '@/styles/index.scss'
+import '@/styles/index'
 import App from './App.vue'
 import { installRouter } from '@/router'
 import { installPinia } from '@/stores'

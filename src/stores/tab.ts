@@ -2,36 +2,36 @@ import type { RouteLocationNormalized } from 'vue-router'
 import { useReset } from '@/hooks'
 
 interface TagState {
-  // tag列表
-  tags: RouteLocationNormalized[]
+  // tab列表
+  tabs: RouteLocationNormalized[]
   // 当前tag路径
   currentTagPath: string
 }
-export const useTagStore = defineStore('tag', () => {
+export const useTabStore = defineStore('tab', () => {
   const [state] = useReset<TagState>({
-    tags: [],
+    tabs: [],
     currentTagPath: '',
   })
 
-  const hasExistTag = (path: string) => {
-    const _tags = [...state.value.tags]
+  const hasExistTab = (path: string) => {
+    const _tags = [...state.value.tabs]
     return _tags.some((item) => {
       return item.path === path
     })
   }
 
   // 添加tag
-  const addTag = (route: RouteLocationNormalized) => {
+  const addTab = (route: RouteLocationNormalized) => {
     if (route.meta.withoutTag)
       return
 
-    if (hasExistTag(route.path))
+    if (hasExistTab(route.path))
       return
-    state.value.tags.push(route)
+    state.value.tabs.push(route)
   }
 
   return {
     ...toRefs(state.value),
-    addTag,
+    addTab,
   }
 })
