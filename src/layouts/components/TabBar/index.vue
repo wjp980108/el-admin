@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RouteLocationNormalized } from 'vue-router'
+import { NScrollbar } from 'naive-ui'
 import { renderIcon } from '@/utils'
 import { useTabStore } from '@/stores'
 
@@ -46,6 +47,15 @@ const dropdown = reactive({
   x: 0,
   y: 0,
 })
+
+// 点击外边关闭菜单
+function onClickOutside() {
+  dropdown.show = false
+}
+
+function handleSelect() {
+}
+
 const currentRoute = ref()
 
 // 右击 tag 显示菜单
@@ -58,34 +68,43 @@ function onRightClickTag(e: MouseEvent, route: RouteLocationNormalized) {
   })
 }
 
-// 点击外边关闭菜单
-function onClickOutside() {
-  dropdown.show = false
+// 判断 tag 类型
+function isTagType(route: RouteLocationNormalized) {
+  return route.path === tabStore.currentTabPath ? 'primary' : 'default'
 }
 
-function handleSelect() {
+const scroll = ref()
+
+// 点击左侧箭头返回左侧
+function onScrollLeft() {
+  scroll.value!.scrollTo({ left: 0, behavior: 'smooth' })
+}
+
+// 点击右侧箭头返回右侧
+function onScrollRight() {
+  const scrollWidth = scroll.value!.scrollbarInstRef.containerRef.scrollWidth
+  scroll.value!.scrollTo({ left: scrollWidth, behavior: 'smooth' })
 }
 </script>
 
 <template>
-  <div class="tab-bar flex-y-center p-(2 l-8 r-8)">
-    <div class="absolute left-1 h-9 w-9 flex-y-center">
+  <div class="tab-bar relative flex-y-center p-(l9 r9)">
+    <div class="absolute left-0 h-100% w-9 flex-center cursor-pointer" @click="onScrollLeft">
       <app-icon icon="mdi:chevron-double-left" :size="20" />
     </div>
-    <div class="overflow-x-auto">
-      <template v-for="item of tabStore.tabs" :key="item.id">
-        <div class="tab-box flex-y-center" @contextmenu.prevent="onRightClickTag($event, item)">
-          <span>{{ item.meta.title }}</span>
-          <div>
-            <span>{{ item.meta.title }}</span>
-          </div>
-          <div class="flex-y-center">
-            <app-icon icon="icon-park-outline:close" :size="12" />
-          </div>
-        </div>
-      </template>
-    </div>
-    <div class="absolute right-1 h-9 w-9 flex-y-center">
+    <NScrollbar ref="scroll" class="p-(2 l0.5 r0.5)" x-scrollable>
+      <n-space :wrap="false">
+        <template v-for="item of tabStore.tabs" :key="item.id">
+          <n-tag class="cursor-pointer" :type="isTagType(item)" :bordered="false" closable @contextmenu.prevent="onRightClickTag($event, item)">
+            {{ item.meta.title }}
+            <template #icon>
+              <app-icon :icon="item.meta.icon" />
+            </template>
+          </n-tag>
+        </template>
+      </n-space>
+    </NScrollbar>
+    <div class="absolute right-0 h-100% w-9 flex-center cursor-pointer" @click="onScrollRight">
       <app-icon icon="mdi:chevron-double-right" :size="20" />
     </div>
     <n-dropdown
@@ -103,16 +122,16 @@ function handleSelect() {
 
 <style scoped lang="scss">
 .tab-bar {
-  position: relative;
+  :deep(.n-scrollbar-rail--horizontal) {
+    display: none;
+  }
 
   .tab-box {
-    background-color: #eee;
     height: 32px;
     padding: 6px;
     border-radius: 3px;
     margin-right: 6px;
     cursor: pointer;
-    //display: inline-block;
   }
 }
 </style>

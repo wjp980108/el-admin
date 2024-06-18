@@ -35,10 +35,12 @@ export async function installRouter(app: App) {
   router.beforeResolve((to) => {
     // 设置菜单高亮
     routeStore.setActiveMenu((to.meta.activeMenu as string) ?? to.fullPath)
+
     // 添加 tag
     tabStore.addTab(to)
-    // // 设置高亮标签;
-    // tabStore.setCurrentTab(to.path as string)
+
+    // 设置当前激活的标签
+    tabStore.setCurrentTab(to.path as string)
   })
 
   router.afterEach((to) => {

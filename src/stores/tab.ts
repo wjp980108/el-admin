@@ -5,12 +5,12 @@ interface TagState {
   // tab列表
   tabs: RouteLocationNormalized[]
   // 当前tag路径
-  currentTagPath: string
+  currentTabPath: string
 }
 export const useTabStore = defineStore('tab', () => {
   const [state] = useReset<TagState>({
     tabs: [],
-    currentTagPath: '',
+    currentTabPath: '',
   })
 
   const hasExistTab = (path: string) => {
@@ -22,7 +22,7 @@ export const useTabStore = defineStore('tab', () => {
 
   // 添加tag
   const addTab = (route: RouteLocationNormalized) => {
-    if (route.meta.withoutTag)
+    if (route.meta.withoutTab)
       return
 
     if (hasExistTab(route.path))
@@ -30,8 +30,14 @@ export const useTabStore = defineStore('tab', () => {
     state.value.tabs.push(route)
   }
 
+  // 设置当前激活的标签
+  const setCurrentTab = (path: string) => {
+    state.value.currentTabPath = path
+  }
+
   return {
     ...toRefs(state.value),
     addTab,
+    setCurrentTab,
   }
 })
