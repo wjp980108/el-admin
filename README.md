@@ -42,7 +42,6 @@ pnpm run build-testing
 ```
 a-calc: ACalcJS 是一个方便的库，用于精确计算和格式化数字
 dayjs: DayJS 是一个极简主义的 JavaScript 库，它是用于解析、验证、操作、以及显示现代浏览器的日期和时间
-lodash: LodashJS 是一个一致性、模块化、高性能的 JavaScript 实用工具库
 @vueuse/core: VueUse 是一个基于Vue组合式API的实用工具集
 jszip: Jszip 是一个使用JavaScript创建、读取和编辑.zip文件的库
 file-saver: FileSaverJS 是在客户端保存文件的解决方案，非常适合在客户端生成文件的web应用程序
