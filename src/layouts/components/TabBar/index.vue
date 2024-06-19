@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { RouteLocationNormalized } from 'vue-router'
-import { NScrollbar } from 'naive-ui'
 import { renderIcon } from '@/utils'
 import { useTabStore } from '@/stores'
 
@@ -92,7 +91,7 @@ function onScrollRight() {
     <div class="absolute left-0 h-100% w-9 flex-center cursor-pointer" @click="onScrollLeft">
       <app-icon icon="mdi:chevron-double-left" :size="20" />
     </div>
-    <NScrollbar ref="scroll" class="p-(2 l0.5 r0.5)" x-scrollable>
+    <n-scrollbar ref="scroll" class="p-(2 l0.5 r0.5)" x-scrollable>
       <n-space :wrap="false">
         <template v-for="item of tabStore.tabs" :key="item.id">
           <n-tag class="cursor-pointer" :type="isTagType(item)" :bordered="false" closable @contextmenu.prevent="onRightClickTag($event, item)">
@@ -103,7 +102,7 @@ function onScrollRight() {
           </n-tag>
         </template>
       </n-space>
-    </NScrollbar>
+    </n-scrollbar>
     <div class="absolute right-0 h-100% w-9 flex-center cursor-pointer" @click="onScrollRight">
       <app-icon icon="mdi:chevron-double-right" :size="20" />
     </div>

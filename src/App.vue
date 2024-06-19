@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { naiveI18nOptions } from '@/utils'
+import NaiveProvider from '@/components/NaiveProvider/index.vue'
 
 const naiveLocale = computed(() => {
   return 'zhCN' ? naiveI18nOptions.zhCN : naiveI18nOptions.enUS
@@ -8,6 +9,8 @@ const naiveLocale = computed(() => {
 
 <template>
   <n-config-provider class="wh-full" :locale="naiveLocale.locale" :date-locale="naiveLocale.dateLocale">
-    <router-view />
+    <NaiveProvider>
+      <router-view />
+    </NaiveProvider>
   </n-config-provider>
 </template>

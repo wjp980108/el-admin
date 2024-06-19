@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AppWrapper from '@/layouts/components/AppHeader/components/Wrapper/index.vue'
 import { useAppStore } from '@/stores'
+import AppWrapper from '@/layouts/components/AppHeader/components/Wrapper/index.vue'
 
 defineOptions({ name: 'AppSetting' })
 
