@@ -48,7 +48,7 @@ const dropdown = reactive({
 })
 
 // 点击外边关闭菜单
-function onClickOutside() {
+function handleClickOutside() {
   dropdown.show = false
 }
 
@@ -58,7 +58,7 @@ function handleSelect() {
 const currentRoute = ref()
 
 // 右击 tag 显示菜单
-function onRightClickTag(e: MouseEvent, route: RouteLocationNormalized) {
+function handleRightClickTag(e: MouseEvent, route: RouteLocationNormalized) {
   currentRoute.value = route
   nextTick().then(() => {
     dropdown.show = true
@@ -75,26 +75,31 @@ function isTagType(route: RouteLocationNormalized) {
 const scroll = ref()
 
 // 点击左侧箭头返回左侧
-function onScrollLeft() {
+function handleScrollLeft() {
   scroll.value!.scrollTo({ left: 0, behavior: 'smooth' })
 }
 
 // 点击右侧箭头返回右侧
-function onScrollRight() {
+function handleScrollRight() {
   const scrollWidth = scroll.value!.scrollbarInstRef.containerRef.scrollWidth
   scroll.value!.scrollTo({ left: scrollWidth, behavior: 'smooth' })
 }
 </script>
 
 <template>
-  <div class="tab-bar relative flex-y-center p-(l9 r9)">
-    <div class="absolute left-0 h-100% w-9 flex-center cursor-pointer" @click="onScrollLeft">
-      <app-icon icon="mdi:chevron-double-left" :size="20" />
-    </div>
-    <n-scrollbar ref="scroll" class="p-(2 l0.5 r0.5)" x-scrollable>
+  <div class="tab-bar relative h-11 flex-y-center p-(l-12.5 r-12.5)">
+    <!--    <div class="absolute left-0 h-100% w-9 flex-center cursor-pointer" @click="handleScrollLeft"> -->
+    <!--      <app-icon icon="mdi:chevron-double-left" :size="20" /> -->
+    <!--    </div> -->
+    <n-button class="absolute left-1 h-100%" :bordered="false" @click="handleScrollLeft">
+      <template #icon>
+        <app-icon icon="mdi:chevron-double-left" :size="20" />
+      </template>
+    </n-button>
+    <n-scrollbar ref="scroll" class="p-(2 l-0.5 r-0.5)" x-scrollable>
       <n-space :wrap="false">
         <template v-for="item of tabStore.tabs" :key="item.id">
-          <n-tag class="cursor-pointer" :type="isTagType(item)" :bordered="false" closable @contextmenu.prevent="onRightClickTag($event, item)">
+          <n-tag class="cursor-pointer" :type="isTagType(item)" :bordered="false" closable @contextmenu.prevent="handleRightClickTag($event, item)">
             {{ item.meta.title }}
             <template #icon>
               <app-icon :icon="item.meta.icon" />
@@ -103,9 +108,14 @@ function onScrollRight() {
         </template>
       </n-space>
     </n-scrollbar>
-    <div class="absolute right-0 h-100% w-9 flex-center cursor-pointer" @click="onScrollRight">
-      <app-icon icon="mdi:chevron-double-right" :size="20" />
-    </div>
+    <!--    <div class="absolute right-0 h-100% w-9 flex-center cursor-pointer" @click="handleScrollRight"> -->
+    <!--      <app-icon icon="mdi:chevron-double-right" :size="20" /> -->
+    <!--    </div> -->
+    <n-button class="absolute right-1 h-100%" :bordered="false" @click="handleScrollRight">
+      <template #icon>
+        <app-icon icon="mdi:chevron-double-right" :size="20" />
+      </template>
+    </n-button>
     <n-dropdown
       placement="bottom-start"
       trigger="manual"
@@ -113,7 +123,7 @@ function onScrollRight() {
       :y="dropdown.y"
       :options="options"
       :show="dropdown.show"
-      @clickoutside="onClickOutside"
+      @clickoutside="handleClickOutside"
       @select="handleSelect"
     />
   </div>

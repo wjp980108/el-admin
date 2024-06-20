@@ -11,7 +11,7 @@ const appStore = useAppStore()
 </script>
 
 <template>
-  <div class="h-60px flex-y-center justify-between b-b-(1 #EFEFF5 solid)">
+  <div class="h-15 flex-y-center justify-between b-b-(1 #EFEFF5 solid)">
     <div>left</div>
     <div class="h-full flex-y-center gap-1 p-x-xl">
       <AppSearch />

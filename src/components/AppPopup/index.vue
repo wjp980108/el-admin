@@ -79,13 +79,13 @@ interface Props {
 // }
 
 // 点击取消按钮
-function onClose() {
+function handleClose() {
   showModal.value = false
   emits('close')
 }
 
 // 点击取消按钮
-function onSubmit() {
+function handleSubmit() {
   emits('submit')
 }
 </script>
@@ -120,10 +120,10 @@ function onSubmit() {
     <template #footer>
       <slot name="footer">
         <n-space justify="end">
-          <n-button @click="onClose">
+          <n-button @click="handleClose">
             {{ negativeText }}
           </n-button>
-          <n-button type="primary" @click="onSubmit">
+          <n-button type="primary" @click="handleSubmit">
             {{ positiveText }}
           </n-button>
         </n-space>

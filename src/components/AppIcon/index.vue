@@ -1,26 +1,25 @@
-<script setup lang="ts">
+<script lang="ts">
+import type { PropType } from 'vue'
+import { NIcon } from 'naive-ui'
 import { Icon } from '@iconify/vue'
 
-defineOptions({ name: 'AppIcon' })
-
-withDefaults(defineProps<IconProps>(), {
-  size: 16,
+export default defineComponent({
+  name: 'AppIcon',
+  props: {
+    /* 图标名称 */
+    icon: String,
+    /* 图标颜色 */
+    color: String,
+    /* 图标大小 */
+    size: {
+      type: Number,
+      default: 16,
+    },
+    /* 图标深度 */
+    depth: Number as PropType<1 | 2 | 3 | 4 | 5>,
+  },
+  setup(props) {
+    return () => h(NIcon, props, () => h(Icon, { icon: props.icon! }))
+  },
 })
-
-interface IconProps {
-  /* 图标名称 */
-  icon?: string
-  /* 图标颜色 */
-  color?: string
-  /* 图标大小 */
-  size?: number
-  /* 图标深度 */
-  depth?: 1 | 2 | 3 | 4 | 5
-}
 </script>
-
-<template>
-  <n-icon :size="size" :depth="depth" :color="color">
-    <Icon :icon="icon!" />
-  </n-icon>
-</template>
