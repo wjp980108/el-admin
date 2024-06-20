@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: '',
   maxHeight: 100,
 })
-const emits = defineEmits(['update:show'])
+const emits = defineEmits(['update:show', 'close', 'submit'])
 
 const showModal = computed({
   get: () => props.show,
@@ -69,12 +69,24 @@ interface Props {
   maxHeight?: string | number
 }
 
-const obj = ref({})
+// 弹窗拖拽，因存在性能问题，暂时不使用
+// const obj = ref({})
+//
+// function handleAfterEnterer() {
+//   obj.value = useDraggable(document.querySelector('.app-popup'), {
+//     initialValue: { x: 0, y: 0 },
+//   })
+// }
 
-function handleAfterEnterer() {
-  obj.value = useDraggable(document.querySelector('.app-popup'), {
-    initialValue: { x: 0, y: 0 },
-  })
+// 点击取消按钮
+function onClose() {
+  showModal.value = false
+  emits('close')
+}
+
+// 点击取消按钮
+function onSubmit() {
+  emits('submit')
 }
 </script>
 
@@ -87,8 +99,7 @@ function handleAfterEnterer() {
     class="app-popup"
     header-class="popup-header"
     content-style="padding-right: 0.375rem"
-
-    :style="[obj.style, popupStyle, 'position: fixed']"
+    :style="popupStyle"
     preset="card"
     v-bind="$attrs"
     size="small"
@@ -97,12 +108,10 @@ function handleAfterEnterer() {
       footer: true,
     }"
     :auto-focus="false"
-    @after-enter="handleAfterEnterer"
   >
     <template #header>
       <slot name="header">
         {{ title }}
-        {{ obj.x }} {{ obj.y }}
       </slot>
     </template>
     <n-scrollbar class="pr-5" :style="contentStyle">
@@ -111,8 +120,10 @@ function handleAfterEnterer() {
     <template #footer>
       <slot name="footer">
         <n-space justify="end">
-          <n-button>{{ negativeText }}</n-button>
-          <n-button type="primary">
+          <n-button @click="onClose">
+            {{ negativeText }}
+          </n-button>
+          <n-button type="primary" @click="onSubmit">
             {{ positiveText }}
           </n-button>
         </n-space>
@@ -123,7 +134,7 @@ function handleAfterEnterer() {
 
 <style lang="scss">
 .popup-header {
-  user-select: none;
-  cursor: move;
+  //user-select: none;
+  //cursor: move;
 }
 </style>
