@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { RouteLocationNormalized } from 'vue-router'
 import { renderIcon } from '@/utils'
-import { useTabStore } from '@/stores'
+import { useAppStore, useTabStore } from '@/stores'
 
 defineOptions({ name: 'TabBar' })
 
-const tabStore = useTabStore()
+const router = useRouter()
+const route = useRoute()
 
 const options = computed(() => {
   return [
@@ -16,7 +17,7 @@ const options = computed(() => {
     },
     {
       label: '关闭',
-      key: 'closeCurrent',
+      key: 'close',
       icon: renderIcon('icon-park-outline:close'),
     },
     {
@@ -47,18 +48,46 @@ const dropdown = reactive({
   y: 0,
 })
 
+const notification = useNotification()
+
+function handleClickTab(item: RouteLocationNormalized) {
+  if (item.path === route.path) {
+    return notification.warning({
+      content: '说点啥呢',
+      meta: '想不出来',
+      duration: 2500,
+      keepAliveOnHover: true,
+    })
+  }
+  router.push(item.path)
+}
+
 // 点击外边关闭菜单
 function handleClickOutside() {
   dropdown.show = false
 }
 
-function handleSelect() {
-}
-
 const currentRoute = ref()
 
-// 右击 tag 显示菜单
-function handleRightClickTag(e: MouseEvent, route: RouteLocationNormalized) {
+const appStore = useAppStore()
+const tabStore = useTabStore()
+
+// 点击右击菜单
+function handleSelect(key: string) {
+  dropdown.show = false
+  const actions: AnyObj = {
+    reload: appStore.reloadPage,
+    close: () => tabStore.closeTab(currentRoute.value!.path),
+    closeOther: () => tabStore.closeOtherTabs(currentRoute.value.path),
+    closeLeft: () => tabStore.closeLeftTabs(currentRoute.value.path),
+    closeRight: () => tabStore.closeRightTabs(currentRoute.value.path),
+    closeAll: tabStore.closeAllTabs,
+  }
+  actions[key]()
+}
+
+// 右击 tab 显示菜单
+function handleRightClickTab(e: MouseEvent, route: RouteLocationNormalized) {
   currentRoute.value = route
   nextTick().then(() => {
     dropdown.show = true
@@ -67,9 +96,14 @@ function handleRightClickTag(e: MouseEvent, route: RouteLocationNormalized) {
   })
 }
 
-// 判断 tag 类型
-function isTagType(route: RouteLocationNormalized) {
+// 判断 tab 类型
+function isTabType(route: RouteLocationNormalized) {
   return route.path === tabStore.currentTabPath ? 'primary' : 'default'
+}
+
+// 判断是否可以关闭
+function isClosable(route: RouteLocationNormalized) {
+  return route.path !== import.meta.env.VITE_HOME_PATH
 }
 
 const scroll = ref()
@@ -99,7 +133,15 @@ function handleScrollRight() {
     <n-scrollbar ref="scroll" class="p-(2 l-0.5 r-0.5)" x-scrollable>
       <n-space :wrap="false">
         <template v-for="item of tabStore.tabs" :key="item.id">
-          <n-tag class="cursor-pointer" :type="isTagType(item)" :bordered="false" closable @contextmenu.prevent="handleRightClickTag($event, item)">
+          <n-tag
+            class="cursor-pointer"
+            :type="isTabType(item)"
+            :bordered="false"
+            :closable="isClosable(item)"
+            @click="handleClickTab(item)"
+            @contextmenu.prevent="handleRightClickTab($event, item)"
+            @close="tabStore.closeTab(item.path)"
+          >
             {{ item.meta.title }}
             <template #icon>
               <app-icon :icon="item.meta.icon" />

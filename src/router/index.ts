@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { App } from 'vue'
+import { createDiscreteApi } from 'naive-ui'
 import { routes } from '@/router/routes.inner'
 import { useRouteStore, useTabStore } from '@/stores'
+
+const { loadingBar } = createDiscreteApi(['loadingBar'])
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,10 +13,12 @@ export const router = createRouter({
 
 export async function installRouter(app: App) {
   const routeStore = useRouteStore()
-
   const tabStore = useTabStore()
 
   router.beforeEach(async (to, from, next) => {
+    // 开始 loadingBar
+    loadingBar.start()
+
     // 判断路由有无进行初始化
     if (!routeStore.isInitAuthRoute) {
       await routeStore.initAuthRoute()
@@ -46,8 +51,9 @@ export async function installRouter(app: App) {
   router.afterEach((to) => {
     // 修改网页标题
     document.title = `${to.meta.title} - ${import.meta.env.VITE_APP_NAME}`
-    // // 结束 loadingBar
-    // appStore.showProgress && window.$loadingBar?.finish()
+
+    // 结束 loadingBar
+    loadingBar.finish()
   })
 
   app.use(router)

@@ -40,9 +40,7 @@ export const useRouteStore = defineStore('route', () => {
 
     // 配置权限路由
     const routes = createRoutes(rowRoutes)
-    routes.forEach((route) => {
-      router.addRoute(route)
-    })
+    router.addRoute(routes)
 
     // 创建菜单
     state.value.menus = createMenus(rowRoutes)

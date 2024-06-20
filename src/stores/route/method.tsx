@@ -46,9 +46,6 @@ export function createRoutes(routes: AppRoute.RowRoute[]) {
     if (item.componentPath && !item.redirect) {
       item.component = modules[`/src/views${item.componentPath}`]
     }
-    else {
-      item.component = Layout
-    }
 
     return item
   })
@@ -56,10 +53,24 @@ export function createRoutes(routes: AppRoute.RowRoute[]) {
   // 将路由数组转换为树结构，生成完整的路由结构数据
   resultRouter = arrayToTree(resultRouter) as AppRoute.Route[]
 
+  const appRootRoute: RouteRecordRaw = {
+    path: '/appRoot',
+    name: 'appRoot',
+    redirect: import.meta.env.VITE_HOME_PATH,
+    component: Layout,
+    meta: {
+      title: '',
+      icon: 'icon-park-outline:home',
+    },
+    children: [],
+  }
+
   // 为路由设置正确的重定向路径
   setRedirect(resultRouter)
 
-  return resultRouter as unknown as RouteRecordRaw[]
+  appRootRoute.children = resultRouter as unknown as RouteRecordRaw[]
+
+  return appRootRoute
 }
 
 /**
@@ -125,24 +136,8 @@ export function createMenus(userRoutes: AppRoute.RowRoute[]) {
   // 不需要显示的过滤菜单
   const visibleMenus = resultMenus.filter(route => !route.meta.hide)
 
-  // 默认有一个首页
-  const target: MenuOption = {
-    label: () =>
-      h(
-        RouterLink,
-        {
-          to: {
-            path: '/home',
-          },
-        },
-        { default: () => '首页' },
-      ),
-    key: '/home',
-    icon: renderIcon('icon-park-outline:home'),
-  }
-
   // 生成侧边菜单
-  return arrayToTree([target, ...transformAuthRoutesToMenus(visibleMenus)])
+  return arrayToTree(transformAuthRoutesToMenus(visibleMenus))
 }
 
 /**
@@ -157,27 +152,41 @@ export function createMenus(userRoutes: AppRoute.RowRoute[]) {
  * @returns - 菜单选项数组。
  */
 function transformAuthRoutesToMenus(userRoutes: AppRoute.Route[]) {
-  // Filter outside menus without permission
+  // 转换为侧菜单数据结构
   return userRoutes.map((item) => {
     const target: MenuOption = {
       id: item.id,
       pid: item.pid,
-      label:
-          (!item.meta.menuType || item.meta.menuType === 'page')
-            ? () =>
-                h(
-                  RouterLink,
-                  {
-                    to: {
-                      path: item.path,
-                    },
-                  },
-                  { default: () => item.meta.title },
-                )
-            : () => item.meta.title,
+      label: setLabel(item),
       key: item.path,
       icon: item.meta.icon ? renderIcon(item.meta.icon) : undefined,
     }
     return target
   })
+}
+
+/**
+ * 此函数根据路由元信息中的 menuType 是否是 page。
+ * 来进行不同的处理，如果是 page 则返回一个 RouterLink 组件。
+ * 否则返回路由的标题。
+ * @param item - 路由数据。
+ * @returns - 配置好的label。
+ */
+function setLabel(item: AppRoute.Route) {
+  return function () {
+    if (!item.meta.menuType || item.meta.menuType === 'page') {
+      return h(
+        RouterLink,
+        {
+          to: {
+            path: item.path,
+          },
+        },
+        { default: () => item.meta.title },
+      )
+    }
+    else {
+      return item.meta.title
+    }
+  }
 }

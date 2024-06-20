@@ -33,7 +33,7 @@ const name = import.meta.env.VITE_APP_NAME
       <span v-show="!appStore.collapsed" class="overflow-hidden text-ellipsis whitespace-nowrap">{{ name }}</span>
     </div>
     <n-scrollbar class="flex-1">
-      <n-menu :collapsed="appStore.collapsed" :options="routeStore.menus" :value="routeStore.activeMenu" accordion />
+      <n-menu :collapsed="appStore.collapsed" :options="routeStore.menus" :value="routeStore.activeMenu" :indent="18" :collapsed-width="64" />
     </n-scrollbar>
   </n-layout-sider>
 </template>
