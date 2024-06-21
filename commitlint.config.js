@@ -7,7 +7,7 @@ export default {
   prompt: {
     messages: {
       type: '选择你要提交的类型 :',
-      scope: '选择一个提交范围（可选）:',
+      scope: '选择一个提交范围:',
       subject: '填写简短精炼的变更描述 :\n',
       body: '填写更加详细的变更描述（可选）。使用 "|" 换行 :\n',
       breaking: '列举非兼容性重大的变更（可选）。使用 "|" 换行 :\n',
@@ -17,39 +17,43 @@ export default {
     types: [
       {
         value: 'feat',
-        name: 'feat:     新增功能 | A new feature',
+        name: 'feat:     新增功能 | 一个新的功能',
       },
       {
         value: 'fix',
-        name: 'fix:      修复缺陷 | A bug fix',
+        name: 'fix:      错误修复 | 修复一个bug',
       },
       {
         value: 'style',
-        name: 'style:    代码格式 | Changes that do not affect the meaning of the code',
+        name: 'style:    格式修改 | 不影响功能，例如空格、格式化、分号等',
       },
       {
         value: 'refactor',
-        name: 'refactor: 代码重构 | A code change that neither fixes a bug nor adds a feature',
+        name: 'refactor: 代码重构 | 既不修复错误也不添加功能的代码更改',
+      },
+      {
+        value: 'perf',
+        name: 'perf:     代码优化 | 提高性能的代码更改',
       },
       {
         value: 'test',
-        name: 'test:     测试相关 | Adding missing tests or correcting existing tests',
+        name: 'test:     测试相关 | 添加测试或更新现有测试',
       },
       {
         value: 'build',
-        name: 'build:    构建相关 | Changes that affect the build system or external dependencies',
+        name: 'build:    构建相关 | 构建工具或外部依赖项的更改',
       },
       {
         value: 'ci',
-        name: 'ci:       持续集成 | Changes to our CI configuration files and scripts',
-      },
-      {
-        value: 'revert',
-        name: 'revert:   回退代码 | Revert to a commit',
+        name: 'ci:       CI 配置  | 对 CI 配置文件和脚本的更改',
       },
       {
         value: 'chore',
-        name: 'chore:    其他修改 | Other changes that do not modify src or test files',
+        name: 'chore:    其他修改 | 其他不修改源代码的更改',
+      },
+      {
+        value: 'revert',
+        name: 'revert:   代码回退 | 撤销一个历史提交',
       },
     ],
     // 是否开启emoji表情
