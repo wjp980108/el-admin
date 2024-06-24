@@ -5,7 +5,7 @@ import AppHeader from '@/layouts/components/AppHeader/index.vue'
 import { useAppStore, useRouteStore } from '@/stores'
 
 defineOptions({ name: 'Layout' })
-const maxHeight = 'max-height: calc(100vh - 60px - 45px)'
+const maxHeight = 'height: calc(100vh - 60px - 45px)'
 
 const scrollbar = ref()
 
@@ -25,8 +25,8 @@ const routeStore = useRouteStore()
         <AppHeader />
         <TabBar />
       </n-layout-header>
-      <n-scrollbar ref="scrollbar" :style="maxHeight">
-        <n-layout-content content-class="p-4">
+      <n-layout-content>
+        <n-scrollbar ref="scrollbar" class="bg-#F7FAFC" :style="maxHeight" content-class="p-4">
           <router-view v-slot="{ Component, route }">
             <transition :name="appStore.transitionAnimation" mode="out-in">
               <keep-alive :include="routeStore.cacheRoutes">
@@ -34,9 +34,8 @@ const routeStore = useRouteStore()
               </keep-alive>
             </transition>
           </router-view>
-          <!--          <router-view /> -->
-        </n-layout-content>
-      </n-scrollbar>
+        </n-scrollbar>
+      </n-layout-content>
     </n-layout>
     <n-back-top :listen-to="target">
       <n-tooltip>
