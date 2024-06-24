@@ -1,11 +1,11 @@
-import { clone, min, omit, pick } from 'radash';
+import { clone, omit, pick } from 'radash';
 import type { RouteRecordRaw } from 'vue-router';
 import { RouterLink } from 'vue-router';
 import type { MenuOption } from 'naive-ui';
 import { arrayToTree, renderIcon } from '@/utils';
 import Layout from '@/layouts/index.vue';
 
-const metaFields: AppRoute.MetaKeys[] = ['title', 'icon', 'requiresAuth', 'roles', 'keepAlive', 'hide', 'order', 'href', 'activeMenu', 'withoutTab', 'pinTab', 'menuType'];
+const metaFields: AppRoute.MetaKeys[] = ['title', 'icon', 'keepAlive', 'hide', 'activeMenu', 'withoutTab', 'menuType'];
 
 /**
  * 此函数用于标准化给定的路由，通过克隆它们并设置它们的元字段。
@@ -101,17 +101,17 @@ function setRedirect(routes: AppRoute.Route[]) {
         const visibleChilds = route.children.filter(child => !child.meta.hide);
 
         // 默认将页面重定向到第一个子元素的路径
-        let target = visibleChilds[0];
+        const target = visibleChilds[0];
 
-        // 过滤掉具有 order 属性的页面
-        const orderChilds = visibleChilds.filter(child => child.meta.order);
-
-        // 如果有具有“order”属性的子路由，此代码块将目标设置为具有最小“order”值的子路由。
-        // 它使用“radash”库中的“min”函数来查找具有最小“order”值的子路由。
-        // “min”函数接受两个参数：子路由数组和返回每个子路由的“order”值的函数。
-        // 结果转换为“AppRoute.Route”类型并分配给“target”。
-        if (orderChilds.length > 0)
-          target = min(orderChilds, i => i.meta.order!) as AppRoute.Route;
+        // // 过滤掉具有 order 属性的页面
+        // const orderChilds = visibleChilds.filter(child => child.meta.order);
+        //
+        // // 如果有具有“order”属性的子路由，此代码块将目标设置为具有最小“order”值的子路由。
+        // // 它使用“radash”库中的“min”函数来查找具有最小“order”值的子路由。
+        // // “min”函数接受两个参数：子路由数组和返回每个子路由的“order”值的函数。
+        // // 结果转换为“AppRoute.Route”类型并分配给“target”。
+        // if (orderChilds.length > 0)
+        //   target = min(orderChilds, i => i.meta.order!) as AppRoute.Route;
 
         if (target)
           route.redirect = target.path;
