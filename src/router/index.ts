@@ -22,6 +22,9 @@ export async function installRouter(app: App) {
     // 判断路由有无进行初始化
     if (!routeStore.isInitAuthRoute) {
       await routeStore.initAuthRoute()
+      // 初始化标签
+      tabStore.initTab()
+
       // 动态路由加载完回到根路由
       if (to.name === '404') {
         // 等待权限路由加载好了，回到之前的路由,否则404
@@ -39,13 +42,13 @@ export async function installRouter(app: App) {
 
   router.beforeResolve((to) => {
     // 设置菜单高亮
-    routeStore.setActiveMenu((to.meta.activeMenu as string) ?? to.fullPath)
+    routeStore.setActiveMenu(to.meta.activeMenu ?? to.fullPath)
 
     // 添加 tag
     tabStore.addTab(to)
 
     // 设置当前激活的标签
-    tabStore.setCurrentTab(to.path as string)
+    tabStore.setCurrentTab(to.path)
   })
 
   router.afterEach((to) => {
