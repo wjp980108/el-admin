@@ -59,7 +59,7 @@ function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: Axi
 
   // 接口请求响应后拦截
   service.interceptors.response.use(
-    async (response: AxiosResponse<AppAxios.ResponseData>) => {
+    async (response: AxiosResponse<any>) => {
       // console.log(response, '响应拦截器');
       const { data, config } = response;
       // 删除重复请求
@@ -91,7 +91,7 @@ function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: Axi
         NMessage.success(message);
       }
 
-      return response;
+      return data;
     },
     (error) => {
       // console.log(error, '响应错误拦截器');
