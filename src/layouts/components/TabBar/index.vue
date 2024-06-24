@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RouteLocationNormalized } from 'vue-router'
+import type { DropdownOption } from 'naive-ui'
 import { renderIcon } from '@/utils'
 import { useAppStore, useTabStore } from '@/stores'
 
@@ -7,49 +8,9 @@ defineOptions({ name: 'TabBar' })
 
 const router = useRouter()
 const route = useRoute()
-
-const options = computed(() => {
-  return [
-    {
-      label: '刷新',
-      key: 'reload',
-      icon: renderIcon('icon-park-outline:redo'),
-    },
-    {
-      label: '关闭',
-      key: 'close',
-      icon: renderIcon('icon-park-outline:close'),
-    },
-    {
-      label: '关闭其他',
-      key: 'closeOther',
-      icon: renderIcon('icon-park-outline:delete-four'),
-    },
-    {
-      label: '关闭左侧',
-      key: 'closeLeft',
-      icon: renderIcon('icon-park-outline:to-left'),
-    },
-    {
-      label: '关闭右侧',
-      key: 'closeRight',
-      icon: renderIcon('icon-park-outline:to-right'),
-    },
-    {
-      label: '关闭全部',
-      key: 'closeAll',
-      icon: renderIcon('icon-park-outline:fullwidth'),
-    },
-  ]
-})
-const dropdown = reactive({
-  show: false,
-  x: 0,
-  y: 0,
-})
-
 const notification = useNotification()
 
+// 点击 tab 切换路由
 function handleClickTab(item: RouteLocationNormalized) {
   if (item.path === route.path) {
     return notification.warning({
@@ -62,12 +23,20 @@ function handleClickTab(item: RouteLocationNormalized) {
   router.push(item.path)
 }
 
+const dropdown = reactive({
+  show: false,
+  x: 0,
+  y: 0,
+})
+
 // 点击外边关闭菜单
 function handleClickOutside() {
   dropdown.show = false
 }
 
-const currentRoute = ref()
+const currentRoute = reactive({
+  path: '',
+})
 
 const appStore = useAppStore()
 const tabStore = useTabStore()
@@ -77,10 +46,10 @@ function handleSelect(key: string) {
   dropdown.show = false
   const actions: AnyObj = {
     reload: appStore.reloadPage,
-    close: () => tabStore.closeTab(currentRoute.value!.path),
-    closeOther: () => tabStore.closeOtherTabs(currentRoute.value.path),
-    closeLeft: () => tabStore.closeLeftTabs(currentRoute.value.path),
-    closeRight: () => tabStore.closeRightTabs(currentRoute.value.path),
+    close: () => tabStore.closeTab(currentRoute.path),
+    closeOther: () => tabStore.closeOtherTabs(currentRoute.path),
+    closeLeft: () => tabStore.closeLeftTabs(currentRoute.path),
+    closeRight: () => tabStore.closeRightTabs(currentRoute.path),
     closeAll: tabStore.closeAllTabs,
   }
   actions[key]()
@@ -88,7 +57,7 @@ function handleSelect(key: string) {
 
 // 右击 tab 显示菜单
 function handleRightClickTab(e: MouseEvent, route: RouteLocationNormalized) {
-  currentRoute.value = route
+  Object.assign(currentRoute, route)
   nextTick().then(() => {
     dropdown.show = true
     dropdown.x = e.clientX
@@ -118,6 +87,46 @@ function handleScrollRight() {
   const scrollWidth = scroll.value!.scrollbarInstRef.containerRef.scrollWidth
   scroll.value!.scrollTo({ left: scrollWidth, behavior: 'smooth' })
 }
+
+const options = computed(() => {
+  const list: DropdownOption[] = [
+    {
+      label: '刷新',
+      key: 'reload',
+      disabled: !(currentRoute.path === tabStore.currentTabPath),
+      icon: renderIcon('icon-park-outline:redo'),
+    },
+    {
+      label: '关闭',
+      key: 'close',
+      show: currentRoute.path !== '/home',
+      icon: renderIcon('icon-park-outline:close'),
+    },
+    {
+      label: '关闭其他',
+      key: 'closeOther',
+      icon: renderIcon('icon-park-outline:delete-four'),
+    },
+    {
+      label: '关闭左侧',
+      key: 'closeLeft',
+      show: currentRoute.path !== '/home',
+      icon: renderIcon('icon-park-outline:to-left'),
+    },
+    {
+      label: '关闭右侧',
+      key: 'closeRight',
+      icon: renderIcon('icon-park-outline:to-right'),
+    },
+    {
+      label: '关闭全部',
+      key: 'closeAll',
+      icon: renderIcon('icon-park-outline:fullwidth'),
+    },
+  ]
+
+  return list
+})
 </script>
 
 <template>

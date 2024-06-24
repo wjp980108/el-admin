@@ -12,15 +12,16 @@ interface TabState {
 
 // 定义 useTabStore 的返回类型
 interface TabStore {
+  tabs: ToRef<UnwrapRef<TabState>['tabs']>
   currentTabPath: ToRef<UnwrapRef<TabState>['currentTabPath']>
+  setCurrentTab: (path: string) => void
+  initTab: () => void
   addTab: (route: RouteLocationNormalized) => void
-  // closeRightTabs: (path: string) => void
-  // setCurrentTab: (path: string) => void
-  // closeAllTabs: () => void
-  // closeLeftTabs: (path: string) => void
-  // tabs: ToRef<UnwrapRef<TabState>['tabs']>
-  // closeOtherTabs: (path: string) => void
   closeTab: (path: string) => void
+  closeOtherTabs: (path: string) => void
+  closeLeftTabs: (path: string) => void
+  closeRightTabs: (path: string) => void
+  closeAllTabs: () => void
 }
 
 export const useTabStore = defineStore('tab', (): TabStore => {
@@ -29,14 +30,39 @@ export const useTabStore = defineStore('tab', (): TabStore => {
     currentTabPath: '',
   })
 
+  const currentTabPath = toRef(state.value, 'currentTabPath')
+
+  // 设置当前激活的标签
+  const setCurrentTab = (path: string) => {
+    currentTabPath.value = path
+  }
+
+  // 判断标签是否已经存在
   const hasExistTab = (path: string) => {
-    const _tags = [...state.value.tabs]
+    const _tags: RouteLocationNormalized[] = [...state.value.tabs]
     return _tags.some((item) => {
       return item.path === path
     })
   }
 
-  // 添加tag
+  // 获取当前标签索引
+  const getTabIndex = (path: string) => {
+    return state.value.tabs.findIndex(item => item.path === path)
+  }
+
+  // 如果是只有一个标签，或者只有两个标签且当前点击标签不是首页时返回
+  const isTabReturn = (path: string) => {
+    return state.value.tabs.length === 1 || (state.value.tabs.length === 2 && path !== '/home')
+  }
+
+  // 初始化标签-从路由中获取首页路由并添加到标签中
+  const initTab = () => {
+    const homeRoute: any = router.getRoutes().find(item => item.path === import.meta.env.VITE_HOME_PATH)
+    if (homeRoute)
+      state.value.tabs.push(homeRoute!)
+  }
+
+  // 添加标签
   const addTab = (route: RouteLocationNormalized) => {
     if (route.meta.withoutTab)
       return
@@ -46,86 +72,115 @@ export const useTabStore = defineStore('tab', (): TabStore => {
     state.value.tabs.push(route)
   }
 
-  // 关闭当前 tag
+  // 关闭当前标签
   const closeTab = async (path: string) => {
-    // 获取关闭的标签索引
-    const index = state.value.tabs.findIndex(item => item.path === path)
+    const index = getTabIndex(path)
 
-    // 如果关闭的是当前标签
-    if (path === state.value.currentTabPath) {
+    // 如果是当前选中的标签
+    if (path === currentTabPath.value) {
       // 如果后边有标签，就跳转到后一个标签
       if (state.value.tabs[index + 1]) {
         await router.push(state.value.tabs[index + 1].path)
-        state.value.tabs = state.value.tabs.filter((item) => {
-          return item.path !== path
-        })
       }
       else {
+        // 如果前边有标签，就跳转到前一个标签
         await router.push(state.value.tabs[index - 1].path)
-        state.value.tabs = state.value.tabs.filter((item) => {
-          return item.path !== path
-        })
       }
+      setTabs()
+    }
+    else {
+      setTabs()
     }
 
-    // // 如果动态标签大于一个,才会标签跳转
-    // if (state.value.tabs.length > 1) {
-    //   // 获取关闭的标签索引
-    //   const index = state.value.tabs.findIndex(item => item.path === path)
-    //   const isLast = index + 1 === state.value.tabs.length
-    //   // 如果是关闭的当前页面，路由跳转到原先标签的后一个标签
-    //   if (state.value.currentTabPath === path && !isLast) {
-    //     // 跳转到后一个标签
-    //     await router.push(state.value.tabs[index + 1].path)
-    //   }
-    //   if (state.value.currentTabPath === path && isLast) {
-    //     // 已经是最后一个了，就跳转前一个
-    //     await router.push(state.value.tabs[index - 1].path)
-    //   }
-    // }
-    // // 删除标签
-    // state.value.tabs = state.value.tabs.filter((item) => {
-    //   return item.path !== path
-    // })
-    // // 删除后如果清空了，就跳转到默认首页
-    // if (state.value.tabs.length - 1 === 0)
-    //   await router.push('/')
-    // if (path === state.value.currentTabPath)
+    function setTabs() {
+      state.value.tabs = state.value.tabs.filter((item) => {
+        return item.path !== path
+      })
+    }
   }
 
-  // // 关闭除了当前 tag 的其他 tag
-  // const closeOtherTabs = (path: string) => {
-  //
-  // }
-  //
-  // // 关闭当前 tag 左侧的全部 tag
-  // const closeLeftTabs = (path: string) => {
-  //
-  // }
-  //
-  // // 关闭当前 tag 右侧的全部 tag
-  // const closeRightTabs = (path: string) => {
-  //
-  // }
-  //
-  // // 关闭全部 tag
-  // const closeAllTabs = () => {
-  //
-  // }
-  //
-  // // 设置当前激活的标签
-  // const setCurrentTab = (path: string) => {
-  //   state.value.currentTabPath = path
-  // }
+  // 关闭其他标签
+  const closeOtherTabs = async (path: string) => {
+    if (isTabReturn(path))
+      return
+
+    // 如果是当前选中的标签
+    if (path === currentTabPath.value) {
+      setTabs()
+    }
+    else {
+      await router.push(path)
+      setTabs()
+    }
+
+    function setTabs() {
+      state.value.tabs = state.value.tabs.filter((item) => {
+        return item.path === path || item.path === '/home'
+      })
+    }
+  }
+
+  // 关闭当前标签的左侧全部标签
+  const closeLeftTabs = async (path: string) => {
+    if (isTabReturn(path))
+      return
+
+    const _tabs: RouteLocationNormalized[] = [...state.value.tabs]
+    const index = getTabIndex(path)
+
+    // 左侧是否有标签
+    if (_tabs[index - 1] && _tabs[index - 1].path !== '/home') {
+      const removeTabs: RouteLocationNormalized[] = _tabs.splice(0, index)
+      const removeIndex = removeTabs.findIndex(item => item.path === currentTabPath.value)
+
+      // 当前标签不是激活状态且关闭的标签中包含激活标签
+      if (path !== currentTabPath.value && removeIndex !== -1)
+        await router.push(path)
+
+      state.value.tabs = [state.value.tabs[0], ..._tabs]
+    }
+  }
+
+  // 关闭当前标签的右侧全部标签
+  const closeRightTabs = async (path: string) => {
+    if (isTabReturn(path))
+      return
+
+    const _tabs: RouteLocationNormalized[] = [...state.value.tabs]
+    const index = getTabIndex(path)
+
+    // 右侧是否有标签
+    if (_tabs[index + 1]) {
+      // 当前标签不是激活状态
+      if (path !== currentTabPath.value)
+        await router.push(path)
+
+      _tabs.splice(index + 1)
+      state.value.tabs = _tabs
+    }
+  }
+
+  // 关闭全部 tag
+  const closeAllTabs = async () => {
+    if (state.value.tabs.length === 1)
+      return
+
+    state.value.tabs = state.value.tabs.filter((item) => {
+      return item.path === '/home'
+    })
+
+    await router.push('/home')
+  }
 
   return {
     ...toRefs(state.value),
+    setCurrentTab,
+    initTab,
     addTab,
     closeTab,
-    // closeOtherTabs,
-    // closeLeftTabs,
-    // closeRightTabs,
-    // closeAllTabs,
-    // setCurrentTab,
+    closeOtherTabs,
+    closeLeftTabs,
+    closeRightTabs,
+    closeAllTabs,
   }
 })
