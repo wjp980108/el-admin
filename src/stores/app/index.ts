@@ -5,7 +5,14 @@ const { isFullscreen, toggle } = useFullscreen(docEle);
 
 type TransitionAnimation = '' | 'fade-slide' | 'fade-bottom' | 'fade-scale' | 'zoom-fade' | 'zoom-out';
 
-interface AppState {
+interface Loading {
+  // 是否显示加载中
+  loadingShow: boolean
+  // 加载中文本
+  loadingText?: string
+}
+
+interface AppState extends Loading {
   // 侧边栏是否折叠
   collapsed: boolean
   // 菜单字体大小
@@ -15,12 +22,15 @@ interface AppState {
   // 页面重载状态
   loadFlag: boolean
 }
+
 export const useAppStore = defineStore('app', () => {
   const [state] = useReset<AppState>({
     collapsed: false,
     menuFontSize: 14,
     transitionAnimation: 'fade-slide',
     loadFlag: true,
+    loadingShow: false,
+    loadingText: '',
   });
   // 全屏状态
   const fullscreen = computed(() => isFullscreen.value);
@@ -44,10 +54,17 @@ export const useAppStore = defineStore('app', () => {
     }
   };
 
+  // 设置加载中
+  const setLoading = (options: Loading) => {
+    state.value.loadingShow = options.loadingShow;
+    state.value.loadingText = options.loadingText;
+  };
+
   return {
     ...toRefs(state.value),
     fullscreen,
     toggleFullScreen,
     reloadPage,
+    setLoading,
   };
 });
