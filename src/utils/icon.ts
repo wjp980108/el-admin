@@ -1,6 +1,6 @@
-import type { IconProps } from 'naive-ui'
-import { NIcon } from 'naive-ui'
-import { Icon } from '@iconify/vue'
+import type { IconProps } from 'naive-ui';
+import { NIcon } from 'naive-ui';
+import { Icon } from '@iconify/vue';
 
 /**
  * `renderIcon` 是一个创建用于显示图标的 Vue 组件的函数。
@@ -14,5 +14,5 @@ import { Icon } from '@iconify/vue'
  * const MyIcon = renderIcon('my-icon', { size: 'large' });
  */
 export function renderIcon(icon: string, props?: IconProps) {
-  return () => h(NIcon, props, { default: () => h(Icon, { icon }) })
+  return () => h(NIcon, props, { default: () => h(Icon, { icon }) });
 }

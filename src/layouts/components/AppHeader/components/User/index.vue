@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { renderIcon } from '@/utils'
+import { renderIcon } from '@/utils';
 
-defineOptions({ name: 'AppUser' })
+defineOptions({ name: 'AppUser' });
 
 const userOptions = [
   {
@@ -27,7 +27,7 @@ const userOptions = [
     key: 'loginOut',
     icon: renderIcon('icon-park-outline:logout'),
   },
-]
+];
 
 function handleSelect() {
 }

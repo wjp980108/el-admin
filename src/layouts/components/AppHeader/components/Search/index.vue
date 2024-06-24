@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AppWrapper from '@/layouts/components/AppHeader/components/Wrapper/index.vue'
+import AppWrapper from '@/layouts/components/AppHeader/components/Wrapper/index.vue';
 
-defineOptions({ name: 'AppSearch' })
+defineOptions({ name: 'AppSearch' });
 </script>
 
 <template>

@@ -1,9 +1,9 @@
-import { useReset } from '@/hooks'
+import { useReset } from '@/hooks';
 
-const docEle = ref(document.documentElement)
-const { isFullscreen, toggle } = useFullscreen(docEle)
+const docEle = ref(document.documentElement);
+const { isFullscreen, toggle } = useFullscreen(docEle);
 
-type TransitionAnimation = '' | 'fade-slide' | 'fade-bottom' | 'fade-scale' | 'zoom-fade' | 'zoom-out'
+type TransitionAnimation = '' | 'fade-slide' | 'fade-bottom' | 'fade-scale' | 'zoom-fade' | 'zoom-out';
 
 interface AppState {
   // 侧边栏是否折叠
@@ -21,33 +21,33 @@ export const useAppStore = defineStore('app', () => {
     menuFontSize: 14,
     transitionAnimation: 'fade-slide',
     loadFlag: true,
-  })
+  });
   // 全屏状态
-  const fullscreen = computed(() => isFullscreen.value)
+  const fullscreen = computed(() => isFullscreen.value);
 
   // 切换全屏
   const toggleFullScreen = () => {
-    toggle().then()
-  }
+    toggle().then();
+  };
 
   // 刷新当前页面
   const reloadPage = async (duration = 300) => {
-    state.value.loadFlag = false
-    await nextTick()
+    state.value.loadFlag = false;
+    await nextTick();
     if (duration) {
       setTimeout(() => {
-        state.value.loadFlag = true
-      }, duration)
+        state.value.loadFlag = true;
+      }, duration);
     }
     else {
-      state.value.loadFlag = true
+      state.value.loadFlag = true;
     }
-  }
+  };
 
   return {
     ...toRefs(state.value),
     fullscreen,
     toggleFullScreen,
     reloadPage,
-  }
-})
+  };
+});

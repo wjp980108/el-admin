@@ -1,7 +1,7 @@
-import { useReset } from '@/hooks/useReset'
-import { router } from '@/router'
-import { createMenus, createRoutes, generateCacheRoutes } from '@/stores/route/method'
-import { staticRoutes } from '@/router/routes.static'
+import { useReset } from '@/hooks/useReset';
+import { router } from '@/router';
+import { createMenus, createRoutes, generateCacheRoutes } from '@/stores/route/method';
+import { staticRoutes } from '@/router/routes.static';
 
 interface RoutesStatus {
   // 是否初始化权限路由
@@ -23,41 +23,41 @@ export const useRouteStore = defineStore('route', () => {
     rowRoutes: [],
     activeMenu: null,
     cacheRoutes: [],
-  })
+  });
 
   const initRouteInfo = async () => {
-    state.value.rowRoutes = staticRoutes
-    return staticRoutes
-  }
+    state.value.rowRoutes = staticRoutes;
+    return staticRoutes;
+  };
 
   const initAuthRoute = async () => {
-    state.value.isInitAuthRoute = false
+    state.value.isInitAuthRoute = false;
 
     // 初始化路由信息
-    const rowRoutes = await initRouteInfo()
+    const rowRoutes = await initRouteInfo();
 
-    state.value.rowRoutes = rowRoutes
+    state.value.rowRoutes = rowRoutes;
 
     // 配置权限路由
-    const routes = createRoutes(rowRoutes)
-    router.addRoute(routes)
+    const routes = createRoutes(rowRoutes);
+    router.addRoute(routes);
 
     // 创建菜单
-    state.value.menus = createMenus(rowRoutes)
+    state.value.menus = createMenus(rowRoutes);
 
     // 获取需要缓存的路由名称
-    state.value.cacheRoutes = generateCacheRoutes(rowRoutes)
+    state.value.cacheRoutes = generateCacheRoutes(rowRoutes);
 
-    state.value.isInitAuthRoute = true
-  }
+    state.value.isInitAuthRoute = true;
+  };
 
   const setActiveMenu = (key: string) => {
-    state.value.activeMenu = key
-  }
+    state.value.activeMenu = key;
+  };
 
   return {
     ...toRefs(state.value),
     initAuthRoute,
     setActiveMenu,
-  }
-})
+  };
+});

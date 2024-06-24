@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useAppStore } from '@/stores'
-import AppWrapper from '@/layouts/components/AppHeader/components/Wrapper/index.vue'
+import { useAppStore } from '@/stores';
+import AppWrapper from '@/layouts/components/AppHeader/components/Wrapper/index.vue';
 
-defineOptions({ name: 'AppSetting' })
+defineOptions({ name: 'AppSetting' });
 
-const showSetting = ref(false)
+const showSetting = ref(false);
 
-const appStore = useAppStore()
+const appStore = useAppStore();
 </script>
 
 <template>

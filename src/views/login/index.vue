@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useRouteStore } from '@/stores'
+import { useRouteStore } from '@/stores';
 
-const routeStore = useRouteStore()
-routeStore.initAuthRoute()
+const routeStore = useRouteStore();
+routeStore.initAuthRoute();
 </script>
 
 <template>

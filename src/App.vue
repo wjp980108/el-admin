@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { naiveI18nOptions } from '@/utils'
-import NaiveProvider from '@/components/NaiveProvider/index.vue'
+import { naiveI18nOptions } from '@/utils';
+import NaiveProvider from '@/components/NaiveProvider/index.vue';
 
 const naiveLocale = computed(() => {
-  return 'zhCN' ? naiveI18nOptions.zhCN : naiveI18nOptions.enUS
-})
+  return 'zhCN' ? naiveI18nOptions.zhCN : naiveI18nOptions.enUS;
+});
 </script>
 
 <template>

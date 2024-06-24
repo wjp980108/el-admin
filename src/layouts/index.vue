@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import SideMenu from '@/layouts/components/SideMenu/index.vue'
-import TabBar from '@/layouts/components/TabBar/index.vue'
-import AppHeader from '@/layouts/components/AppHeader/index.vue'
-import { useAppStore, useRouteStore } from '@/stores'
+import SideMenu from '@/layouts/components/SideMenu/index.vue';
+import TabBar from '@/layouts/components/TabBar/index.vue';
+import AppHeader from '@/layouts/components/AppHeader/index.vue';
+import { useAppStore, useRouteStore } from '@/stores';
 
-defineOptions({ name: 'Layout' })
-const maxHeight = 'height: calc(100vh - 60px - 45px)'
+defineOptions({ name: 'Layout' });
+const maxHeight = 'height: calc(100vh - 60px - 45px)';
 
-const scrollbar = ref()
+const scrollbar = ref();
 
 function target() {
-  return scrollbar.value!.scrollbarInstRef.containerRef
+  return scrollbar.value!.scrollbarInstRef.containerRef;
 }
 
-const appStore = useAppStore()
-const routeStore = useRouteStore()
+const appStore = useAppStore();
+const routeStore = useRouteStore();
 </script>
 
 <template>

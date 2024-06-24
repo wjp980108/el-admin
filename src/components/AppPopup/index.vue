@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineOptions({ name: 'AppPopup' })
+defineOptions({ name: 'AppPopup' });
 
 const props = withDefaults(defineProps<Props>(), {
   show: false,
@@ -9,48 +9,48 @@ const props = withDefaults(defineProps<Props>(), {
   width: 175,
   height: '',
   maxHeight: 100,
-})
-const emits = defineEmits(['update:show', 'close', 'submit'])
+});
+const emits = defineEmits(['update:show', 'close', 'submit']);
 
 const showModal = computed({
   get: () => props.show,
   set: (val: boolean) => {
-    emits('update:show', val)
+    emits('update:show', val);
   },
-})
+});
 
 // 弹窗样式
 const popupStyle = computed(() => {
   // 公式：1px / 16px / 4单位 = 0.015625rem
-  const unitList = ['px', 'vw', '%']
-  const widthIncludesUnit = unitList.some(unit => props.width.toString().includes(unit))
+  const unitList = ['px', 'vw', '%'];
+  const widthIncludesUnit = unitList.some(unit => props.width.toString().includes(unit));
 
   if (widthIncludesUnit) {
-    return `width: ${props.width}`
+    return `width: ${props.width}`;
   }
 
-  return `width: ${Number(props.width) / 4}rem`
-})
+  return `width: ${Number(props.width) / 4}rem`;
+});
 
 const contentStyle = computed(() => {
   // 公式：1px / 16px / 4单位 = 0.015625rem
-  const unitList = ['px', 'vh', '%']
-  let height = props.height && `height: ${Number(props.height) / 4}rem`
-  const heightIncludesUnit = unitList.some(unit => props.height.toString().includes(unit))
+  const unitList = ['px', 'vh', '%'];
+  let height = props.height && `height: ${Number(props.height) / 4}rem`;
+  const heightIncludesUnit = unitList.some(unit => props.height.toString().includes(unit));
 
   if (heightIncludesUnit) {
-    height = `max-height: ${props.height}`
+    height = `max-height: ${props.height}`;
   }
 
-  let maxHeight = props.maxHeight && `max-height: ${Number(props.maxHeight) / 4}rem`
-  const maxHeightIncludesUnit = unitList.some(unit => props.maxHeight.toString().includes(unit))
+  let maxHeight = props.maxHeight && `max-height: ${Number(props.maxHeight) / 4}rem`;
+  const maxHeightIncludesUnit = unitList.some(unit => props.maxHeight.toString().includes(unit));
 
   if (maxHeightIncludesUnit) {
-    maxHeight = `max-height: ${props.maxHeight}`
+    maxHeight = `max-height: ${props.maxHeight}`;
   }
 
-  return [height, maxHeight]
-})
+  return [height, maxHeight];
+});
 
 interface Props {
   // 是否显示弹窗
@@ -80,13 +80,13 @@ interface Props {
 
 // 点击取消按钮
 function handleClose() {
-  showModal.value = false
-  emits('close')
+  showModal.value = false;
+  emits('close');
 }
 
 // 点击取消按钮
 function handleSubmit() {
-  emits('submit')
+  emits('submit');
 }
 </script>
 

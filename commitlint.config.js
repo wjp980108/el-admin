@@ -81,4 +81,4 @@ export default {
     // 定义 header 长度
     maxHeaderLength: 79,
   },
-}
+};

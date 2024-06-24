@@ -1,11 +1,11 @@
-import { clone, min, omit, pick } from 'radash'
-import type { RouteRecordRaw } from 'vue-router'
-import { RouterLink } from 'vue-router'
-import type { MenuOption } from 'naive-ui'
-import { arrayToTree, renderIcon } from '@/utils'
-import Layout from '@/layouts/index.vue'
+import { clone, min, omit, pick } from 'radash';
+import type { RouteRecordRaw } from 'vue-router';
+import { RouterLink } from 'vue-router';
+import type { MenuOption } from 'naive-ui';
+import { arrayToTree, renderIcon } from '@/utils';
+import Layout from '@/layouts/index.vue';
 
-const metaFields: AppRoute.MetaKeys[] = ['title', 'icon', 'requiresAuth', 'roles', 'keepAlive', 'hide', 'order', 'href', 'activeMenu', 'withoutTab', 'pinTab', 'menuType']
+const metaFields: AppRoute.MetaKeys[] = ['title', 'icon', 'requiresAuth', 'roles', 'keepAlive', 'hide', 'order', 'href', 'activeMenu', 'withoutTab', 'pinTab', 'menuType'];
 
 /**
  * 此函数用于标准化给定的路由，通过克隆它们并设置它们的元字段。
@@ -18,14 +18,14 @@ function standardizedRoutes(route: AppRoute.RowRoute[]) {
   return clone(route).map((i) => {
     // 这行代码使用 'radash' 库中的 'omit' 函数创建一个新对象，
     // 该对象是原始对象（i）的副本，但排除了 'metaFields' 数组中指定的属性。
-    const route = omit(i, metaFields)
+    const route = omit(i, metaFields);
 
     // 这行代码使用 'Reflect.set' 方法向 'route' 对象添加 'meta' 属性。
     // 'meta' 属性的值是一个新对象，它是原始对象 (i) 的副本，
     // 但仅包含 'metaFields' 数组中指定的属性。
-    Reflect.set(route, 'meta', pick(i, metaFields))
-    return route
-  }) as AppRoute.Route[]
+    Reflect.set(route, 'meta', pick(i, metaFields));
+    return route;
+  }) as AppRoute.Route[];
 }
 
 /**
@@ -38,20 +38,20 @@ function standardizedRoutes(route: AppRoute.RowRoute[]) {
  */
 export function createRoutes(routes: AppRoute.RowRoute[]) {
   // 构建元字段数据
-  let resultRouter = standardizedRoutes(routes)
+  let resultRouter = standardizedRoutes(routes);
 
   // 路由配置对应组件路径，有重定向的路由无需配置
-  const modules = import.meta.glob('@/views/**/*.vue')
+  const modules = import.meta.glob('@/views/**/*.vue');
   resultRouter = resultRouter.map((item: AppRoute.Route) => {
     if (item.componentPath && !item.redirect) {
-      item.component = modules[`/src/views${item.componentPath}`]
+      item.component = modules[`/src/views${item.componentPath}`];
     }
 
-    return item
-  })
+    return item;
+  });
 
   // 将路由数组转换为树结构，生成完整的路由结构数据
-  resultRouter = arrayToTree(resultRouter) as AppRoute.Route[]
+  resultRouter = arrayToTree(resultRouter) as AppRoute.Route[];
 
   const appRootRoute: RouteRecordRaw = {
     path: '/appRoot',
@@ -63,14 +63,14 @@ export function createRoutes(routes: AppRoute.RowRoute[]) {
       icon: 'icon-park-outline:home',
     },
     children: [],
-  }
+  };
 
   // 为路由设置正确的重定向路径
-  setRedirect(resultRouter)
+  setRedirect(resultRouter);
 
-  appRootRoute.children = resultRouter as unknown as RouteRecordRaw[]
+  appRootRoute.children = resultRouter as unknown as RouteRecordRaw[];
 
-  return appRootRoute
+  return appRootRoute;
 }
 
 /**
@@ -83,7 +83,7 @@ export function createRoutes(routes: AppRoute.RowRoute[]) {
 export function generateCacheRoutes(routes: AppRoute.RowRoute[]) {
   return routes
     .filter(i => i.keepAlive)
-    .map(i => i.name)
+    .map(i => i.name);
 }
 
 /**
@@ -98,28 +98,28 @@ function setRedirect(routes: AppRoute.Route[]) {
     if (route.children) {
       if (!route.redirect) {
         // 过滤掉非隐藏的子元素集合
-        const visibleChilds = route.children.filter(child => !child.meta.hide)
+        const visibleChilds = route.children.filter(child => !child.meta.hide);
 
         // 默认将页面重定向到第一个子元素的路径
-        let target = visibleChilds[0]
+        let target = visibleChilds[0];
 
         // 过滤掉具有 order 属性的页面
-        const orderChilds = visibleChilds.filter(child => child.meta.order)
+        const orderChilds = visibleChilds.filter(child => child.meta.order);
 
         // 如果有具有“order”属性的子路由，此代码块将目标设置为具有最小“order”值的子路由。
         // 它使用“radash”库中的“min”函数来查找具有最小“order”值的子路由。
         // “min”函数接受两个参数：子路由数组和返回每个子路由的“order”值的函数。
         // 结果转换为“AppRoute.Route”类型并分配给“target”。
         if (orderChilds.length > 0)
-          target = min(orderChilds, i => i.meta.order!) as AppRoute.Route
+          target = min(orderChilds, i => i.meta.order!) as AppRoute.Route;
 
         if (target)
-          route.redirect = target.path
+          route.redirect = target.path;
       }
 
-      setRedirect(route.children)
+      setRedirect(route.children);
     }
-  })
+  });
 }
 
 /**
@@ -131,13 +131,13 @@ function setRedirect(routes: AppRoute.Route[]) {
  * @returns - 树结构中的菜单选项数组。
  */
 export function createMenus(userRoutes: AppRoute.RowRoute[]) {
-  const resultMenus = standardizedRoutes(userRoutes)
+  const resultMenus = standardizedRoutes(userRoutes);
 
   // 不需要显示的过滤菜单
-  const visibleMenus = resultMenus.filter(route => !route.meta.hide)
+  const visibleMenus = resultMenus.filter(route => !route.meta.hide);
 
   // 生成侧边菜单
-  return arrayToTree(transformAuthRoutesToMenus(visibleMenus))
+  return arrayToTree(transformAuthRoutesToMenus(visibleMenus));
 }
 
 /**
@@ -160,9 +160,9 @@ function transformAuthRoutesToMenus(userRoutes: AppRoute.Route[]) {
       label: setLabel(item),
       key: item.path,
       icon: item.meta.icon ? renderIcon(item.meta.icon) : undefined,
-    }
-    return target
-  })
+    };
+    return target;
+  });
 }
 
 /**
@@ -183,10 +183,10 @@ function setLabel(item: AppRoute.Route) {
           },
         },
         { default: () => item.meta.title },
-      )
+      );
     }
     else {
-      return item.meta.title
+      return item.meta.title;
     }
-  }
+  };
 }

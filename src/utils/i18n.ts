@@ -1,5 +1,5 @@
-import type { NDateLocale, NLocale } from 'naive-ui'
-import { dateZhCN, zhCN } from 'naive-ui'
+import type { NDateLocale, NLocale } from 'naive-ui';
+import { dateZhCN, zhCN } from 'naive-ui';
 
 export const naiveI18nOptions: Record<App.lang, { locale: NLocale | null, dateLocale: NDateLocale | null }> = {
   zhCN: {
@@ -10,4 +10,4 @@ export const naiveI18nOptions: Record<App.lang, { locale: NLocale | null, dateLo
     locale: null,
     dateLocale: null,
   },
-}
+};

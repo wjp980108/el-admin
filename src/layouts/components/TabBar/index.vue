@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { RouteLocationNormalized } from 'vue-router'
-import type { DropdownOption } from 'naive-ui'
-import { renderIcon } from '@/utils'
-import { useAppStore, useTabStore } from '@/stores'
+import type { RouteLocationNormalized } from 'vue-router';
+import type { DropdownOption } from 'naive-ui';
+import { renderIcon } from '@/utils';
+import { useAppStore, useTabStore } from '@/stores';
 
-defineOptions({ name: 'TabBar' })
+defineOptions({ name: 'TabBar' });
 
-const router = useRouter()
-const route = useRoute()
-const notification = useNotification()
+const router = useRouter();
+const route = useRoute();
+const notification = useNotification();
 
 // 点击 tab 切换路由
 function handleClickTab(item: RouteLocationNormalized) {
@@ -18,32 +18,32 @@ function handleClickTab(item: RouteLocationNormalized) {
       meta: '想不出来',
       duration: 2500,
       keepAliveOnHover: true,
-    })
+    });
   }
-  router.push(item.path)
+  router.push(item.path);
 }
 
 const dropdown = reactive({
   show: false,
   x: 0,
   y: 0,
-})
+});
 
 // 点击外边关闭菜单
 function handleClickOutside() {
-  dropdown.show = false
+  dropdown.show = false;
 }
 
 const currentRoute = reactive({
   path: '',
-})
+});
 
-const appStore = useAppStore()
-const tabStore = useTabStore()
+const appStore = useAppStore();
+const tabStore = useTabStore();
 
 // 点击右击菜单
 function handleSelect(key: string) {
-  dropdown.show = false
+  dropdown.show = false;
   const actions: AnyObj = {
     reload: appStore.reloadPage,
     close: () => tabStore.closeTab(currentRoute.path),
@@ -51,41 +51,41 @@ function handleSelect(key: string) {
     closeLeft: () => tabStore.closeLeftTabs(currentRoute.path),
     closeRight: () => tabStore.closeRightTabs(currentRoute.path),
     closeAll: tabStore.closeAllTabs,
-  }
-  actions[key]()
+  };
+  actions[key]();
 }
 
 // 右击 tab 显示菜单
 function handleRightClickTab(e: MouseEvent, route: RouteLocationNormalized) {
-  Object.assign(currentRoute, route)
+  Object.assign(currentRoute, route);
   nextTick().then(() => {
-    dropdown.show = true
-    dropdown.x = e.clientX
-    dropdown.y = e.clientY
-  })
+    dropdown.show = true;
+    dropdown.x = e.clientX;
+    dropdown.y = e.clientY;
+  });
 }
 
 // 判断 tab 类型
 function isTabType(route: RouteLocationNormalized) {
-  return route.path === tabStore.currentTabPath ? 'primary' : 'default'
+  return route.path === tabStore.currentTabPath ? 'primary' : 'default';
 }
 
 // 判断是否可以关闭
 function isClosable(route: RouteLocationNormalized) {
-  return route.path !== import.meta.env.VITE_HOME_PATH
+  return route.path !== import.meta.env.VITE_HOME_PATH;
 }
 
-const scroll = ref()
+const scroll = ref();
 
 // 点击左侧箭头返回左侧
 function handleScrollLeft() {
-  scroll.value!.scrollTo({ left: 0, behavior: 'smooth' })
+  scroll.value!.scrollTo({ left: 0, behavior: 'smooth' });
 }
 
 // 点击右侧箭头返回右侧
 function handleScrollRight() {
-  const scrollWidth = scroll.value!.scrollbarInstRef.containerRef.scrollWidth
-  scroll.value!.scrollTo({ left: scrollWidth, behavior: 'smooth' })
+  const scrollWidth = scroll.value!.scrollbarInstRef.containerRef.scrollWidth;
+  scroll.value!.scrollTo({ left: scrollWidth, behavior: 'smooth' });
 }
 
 const options = computed(() => {
@@ -123,10 +123,10 @@ const options = computed(() => {
       key: 'closeAll',
       icon: renderIcon('icon-park-outline:fullwidth'),
     },
-  ]
+  ];
 
-  return list
-})
+  return list;
+});
 </script>
 
 <template>

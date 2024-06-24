@@ -1,5 +1,5 @@
-declare type AnyObj = Record<string, any>
+declare type AnyObj = Record<string, any>;
 
 declare namespace App {
-  type lang = 'zhCN' | 'enUS'
+  type lang = 'zhCN' | 'enUS';
 }

@@ -1,1 +1,1 @@
-export * from './useReset'
+export * from './useReset';

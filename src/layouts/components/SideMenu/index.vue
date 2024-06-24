@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useAppStore, useRouteStore } from '@/stores'
-import logo from '@/assets/logo.svg'
+import { useAppStore, useRouteStore } from '@/stores';
+import logo from '@/assets/logo.svg';
 
-defineOptions({ name: 'SideMenu' })
+defineOptions({ name: 'SideMenu' });
 
-const routeStore = useRouteStore()
+const routeStore = useRouteStore();
 
-const router = useRouter()
+const router = useRouter();
 
-const appStore = useAppStore()
+const appStore = useAppStore();
 
-const name = import.meta.env.VITE_APP_NAME
+const name = import.meta.env.VITE_APP_NAME;
 </script>
 
 <template>

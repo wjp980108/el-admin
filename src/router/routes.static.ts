@@ -47,4 +47,4 @@ export const staticRoutes: AppRoute.RowRoute[] = [
     id: 4,
     pid: 2,
   },
-]
+];

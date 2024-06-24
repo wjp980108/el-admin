@@ -1,7 +1,7 @@
 <script lang="ts">
-import type { PropType } from 'vue'
-import { NIcon } from 'naive-ui'
-import { Icon } from '@iconify/vue'
+import type { PropType } from 'vue';
+import { NIcon } from 'naive-ui';
+import { Icon } from '@iconify/vue';
 
 export default defineComponent({
   name: 'AppIcon',
@@ -19,7 +19,7 @@ export default defineComponent({
     depth: Number as PropType<1 | 2 | 3 | 4 | 5>,
   },
   setup(props) {
-    return () => h(NIcon, props, () => h(Icon, { icon: props.icon! }))
+    return () => h(NIcon, props, () => h(Icon, { icon: props.icon! }));
   },
-})
+});
 </script>

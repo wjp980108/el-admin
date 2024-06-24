@@ -1,6 +1,6 @@
 declare namespace AppRoute {
 
-  type MenuType = 'dir' | 'page'
+  type MenuType = 'dir' | 'page';
   /** 单个路由所携带的meta标识 */
   interface RouteMeta {
     /* 页面标题，通常必选。 */
@@ -19,7 +19,7 @@ declare namespace AppRoute {
     menuType?: MenuType
   }
 
-  type MetaKeys = keyof RouteMeta
+  type MetaKeys = keyof RouteMeta;
 
   interface baseRoute {
     /** 路由名称(路由唯一标识) */
@@ -37,7 +37,7 @@ declare namespace AppRoute {
   }
 
   /** 单个路由的类型结构(动态路由模式：后端返回此类型结构的路由) */
-  type RowRoute = RouteMeta & baseRoute
+  type RowRoute = RouteMeta & baseRoute;
 
   /**
    * 挂载到项目上的真实路由结构

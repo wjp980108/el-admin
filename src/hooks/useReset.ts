@@ -1,4 +1,4 @@
-import type { Ref, UnwrapRef } from 'vue'
+import type { Ref, UnwrapRef } from 'vue';
 
 /**
  * `useReset` 是一个创建具有重置功能的响应式引用的函数。
@@ -18,10 +18,10 @@ import type { Ref, UnwrapRef } from 'vue'
  * resetState();
  */
 export function useReset<T>(val: T): [Ref<UnwrapRef<T>>, () => void] {
-  const _val = structuredClone<T>(val)
-  const res = ref<T>(val)
+  const _val = structuredClone<T>(val);
+  const res = ref<T>(val);
   const reset = () => {
-    res.value = structuredClone(_val) as UnwrapRef<T>
-  }
-  return [res, reset]
+    res.value = structuredClone(_val) as UnwrapRef<T>;
+  };
+  return [res, reset];
 }

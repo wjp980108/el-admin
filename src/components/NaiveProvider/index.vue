@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineOptions({ name: 'NaiveProvider' })
+defineOptions({ name: 'NaiveProvider' });
 </script>
 
 <template>

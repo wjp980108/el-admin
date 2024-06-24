@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useAppStore } from '@/stores'
-import AppSetting from '@/layouts/components/AppHeader/components/Setting/index.vue'
-import AppSearch from '@/layouts/components/AppHeader/components/Search/index.vue'
-import AppUser from '@/layouts/components/AppHeader/components/User/index.vue'
-import AppWrapper from '@/layouts/components/AppHeader/components/Wrapper/index.vue'
+import { useAppStore } from '@/stores';
+import AppSetting from '@/layouts/components/AppHeader/components/Setting/index.vue';
+import AppSearch from '@/layouts/components/AppHeader/components/Search/index.vue';
+import AppUser from '@/layouts/components/AppHeader/components/User/index.vue';
+import AppWrapper from '@/layouts/components/AppHeader/components/Wrapper/index.vue';
 
-defineOptions({ name: 'AppHeader' })
+defineOptions({ name: 'AppHeader' });
 
-const appStore = useAppStore()
+const appStore = useAppStore();
 </script>
 
 <template>

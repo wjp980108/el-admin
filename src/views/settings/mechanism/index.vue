@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineOptions({ name: 'Mechanism' })
+defineOptions({ name: 'Mechanism' });
 </script>
 
 <template>

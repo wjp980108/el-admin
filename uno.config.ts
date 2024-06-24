@@ -1,4 +1,4 @@
-import { defineConfig, presetAttributify, presetUno, transformerVariantGroup } from 'unocss'
+import { defineConfig, presetAttributify, presetUno, transformerVariantGroup } from 'unocss';
 
 // https://github.com/unocss/unocss
 
@@ -14,4 +14,4 @@ export default defineConfig({
   transformers: [
     transformerVariantGroup(),
   ],
-})
+});

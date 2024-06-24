@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineOptions({ name: 'Wrapper' })
+defineOptions({ name: 'Wrapper' });
 </script>
 
 <template>
