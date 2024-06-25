@@ -29,7 +29,7 @@ const name = import.meta.env.VITE_APP_NAME;
       class="h-60px flex-center cursor-pointer gap-2 p-x-2 text-xl"
       @click="router.push('/')"
     >
-      <n-image :width="60" :src="logo" />
+      <n-image :width="60" :src="logo" preview-disabled />
       <span v-show="!appStore.collapsed" class="overflow-hidden text-ellipsis whitespace-nowrap">{{ name }}</span>
     </div>
     <n-scrollbar class="flex-1">

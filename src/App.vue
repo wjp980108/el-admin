@@ -13,7 +13,7 @@ const appStore = useAppStore();
 <template>
   <n-config-provider class="wh-full" :locale="naiveLocale.locale" :date-locale="naiveLocale.dateLocale">
     <NaiveProvider>
-      <n-spin :show="appStore.loadingShow" :description="appStore.loadingText">
+      <n-spin class="wh-full" content-class="wh-full" :show="appStore.loadingShow" :description="appStore.loadingText">
         <router-view />
       </n-spin>
     </NaiveProvider>

@@ -45,7 +45,7 @@ export function createStorage(params: CreateStorageParams) {
      * @param key 要获取数据的key
      * @param def 默认值
      */
-    async getItem<T>(key: string, def: any): Promise<T> {
+    async getItem<T = any>(key: string, def: any): Promise<T> {
       try {
         const item = await this.store.getItem<string>(this.getKey(key));
 
