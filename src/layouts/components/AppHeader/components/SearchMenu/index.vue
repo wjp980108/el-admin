@@ -135,6 +135,7 @@ registerShortcut();
   <n-modal
     v-model:show="showModal"
     class="m-t-5vh w-125"
+    content-class="!p-(t-3 b-3 l-0 r-0)"
     preset="card"
     size="small"
     :closable="false"
@@ -152,10 +153,10 @@ registerShortcut();
       </n-input>
     </template>
     <n-el v-if="getMenus.length">
-      <div class="text-[var(--primary-color)]">
+      <div class="p-(l-4 r-4) text-[var(--primary-color)]">
         搜索结果
       </div>
-      <n-scrollbar ref="scrollbarRef" class="max-h-100">
+      <n-scrollbar ref="scrollbarRef" class="max-h-100" content-class="p-(l-4 r-4)">
         <n-flex :size="5" vertical>
           <n-card
             v-for="item of getMenus"
