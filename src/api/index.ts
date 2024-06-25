@@ -6,12 +6,8 @@ import request from '@/utils/axios';
  */
 export function login(data: AnyObj) {
   return request({
-    url: '/api/User/Login',
+    url: '/auth/login',
     method: 'post',
     data,
-  }, {
-    message: true,
-    messageText: '登录成功',
-    loading: true,
   });
 }
