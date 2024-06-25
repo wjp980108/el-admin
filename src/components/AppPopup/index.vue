@@ -10,7 +10,25 @@ const props = withDefaults(defineProps<Props>(), {
   height: '',
   maxHeight: 100,
 });
+
 const emits = defineEmits(['update:show', 'close', 'submit']);
+
+interface Props {
+  // 是否显示弹窗
+  show: boolean
+  // 弹窗标题
+  title?: string
+  // 确定按钮文本
+  positiveText?: string
+  // 取消按钮文本
+  negativeText?: string
+  // 弹窗宽度（使用的是 unocss 单位）
+  width?: string | number
+  // 弹窗内容高度（使用的是 unocss 单位）
+  height?: string | number
+  // 弹窗内容最大高度（使用的是 unocss 单位）
+  maxHeight?: string | number
+}
 
 const showModal = computed({
   get: () => props.show,
@@ -51,23 +69,6 @@ const contentStyle = computed(() => {
 
   return [height, maxHeight];
 });
-
-interface Props {
-  // 是否显示弹窗
-  show: boolean
-  // 弹窗标题
-  title?: string
-  // 确定按钮文本
-  positiveText?: string
-  // 取消按钮文本
-  negativeText?: string
-  // 弹窗宽度（使用的是 unocss 单位）
-  width?: string | number
-  // 弹窗内容高度（使用的是 unocss 单位）
-  height?: string | number
-  // 弹窗内容最大高度（使用的是 unocss 单位）
-  maxHeight?: string | number
-}
 
 // 弹窗拖拽，因存在性能问题，暂时不使用
 // const obj = ref({})
