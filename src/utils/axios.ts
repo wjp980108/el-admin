@@ -3,14 +3,14 @@ import axios from 'axios';
 import qs from 'qs';
 import { createDiscreteApi } from 'naive-ui';
 import { router } from '@/router';
-import { useAppStore } from '@/stores';
+import { useAppStore, useUserStore } from '@/stores';
 
 const pendingMap = new Map();
 
 const { message: NMessage } = createDiscreteApi(['message']);
 function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: AxiosRequestConfig, options: AppAxios.Options = {}): T {
   // 获取用户信息
-  // const userStore = useUserStore();
+  const userStore = useUserStore();
 
   const serviceConfig = {
     baseURL: '',
@@ -45,13 +45,10 @@ function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: Axi
       // 显示 Loading
       options.loading && setLoading(true, options.loadingText);
 
-      // // 自动携带 token
-      // if (userStore.getToken) {
-      //   if (config.method === 'post')
-      //     config.data = { token: userStore.getToken, ...config.data };
-      //   if (config.method === 'get')
-      //     config.params = { token: userStore.getToken, ...config.params };
-      // }
+      // 自动携带 token
+      if (userStore.accessToken) {
+        config.headers.Authorization = `Bearer ${userStore.accessToken}`;
+      }
 
       return config;
     },
@@ -166,6 +163,7 @@ function setLoading(show: boolean, text?: string) {
  * 处理异常
  */
 function httpErrorStatusHandle(error: any) {
+  // console.log(error, 'error');
   // 处理被取消的请求
   if (axios.isCancel(error))
     return console.error(`自动取消重复请求${error.message}`);

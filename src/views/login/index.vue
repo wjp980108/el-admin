@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormInst, FormRules } from 'naive-ui';
-import { useRouteStore } from '@/stores';
+import { useRouteStore, useUserStore } from '@/stores';
 import { login } from '@/api';
 import { storage } from '@/utils';
 import logo from '@/assets/logo.svg';
@@ -50,9 +50,13 @@ async function getUserConfig() {
 
 onMounted(getUserConfig);
 
+const userStore = useUserStore();
+
 const formRef = ref<FormInst | null>(null);
 
+const router = useRouter();
 const notification = useNotification();
+
 // 点击登录
 function handleLogin() {
   formRef.value?.validate(async (errors) => {
@@ -68,10 +72,14 @@ function handleLogin() {
         await storage.removeItem('loginAccount');
       }
 
-      await login(state);
+      const res = await login(state);
+      await userStore.setToken(res.token);
       await routeStore.initAuthRoute();
+      await router.push('/');
       notification.success({
         content: '登录成功',
+        title: '想不出来',
+        duration: 2500,
       });
     }
     finally {
@@ -82,7 +90,7 @@ function handleLogin() {
 </script>
 
 <template>
-  <div class="wh-full flex-center">
+  <n-el class="wh-full flex-center bg-[var(--body-color)]">
     <n-card class="w-112.5 shadow-[var(--n-box-shadow)]">
       <template #header>
         <n-space align="center">
@@ -114,7 +122,7 @@ function handleLogin() {
         </n-space>
       </n-form>
     </n-card>
-  </div>
+  </n-el>
 </template>
 
 <style scoped>

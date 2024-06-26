@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { App } from 'vue';
 import { createDiscreteApi } from 'naive-ui';
+import { isEmpty } from 'radash';
 import { routes } from '@/router/routes.inner';
-import { useRouteStore, useTabStore } from '@/stores';
+import { useRouteStore, useTabStore, useUserStore } from '@/stores';
 
 const { loadingBar } = createDiscreteApi(['loadingBar']);
 
@@ -14,10 +15,26 @@ export const router = createRouter({
 export async function installRouter(app: App) {
   const routeStore = useRouteStore();
   const tabStore = useTabStore();
+  const userStore = useUserStore();
 
   router.beforeEach(async (to, from, next) => {
     // 开始 loadingBar
     loadingBar.start();
+
+    // 是否已经登录过
+    if (!userStore.accessToken) {
+      if (to.name === 'login') {
+        next();
+      }
+      else {
+        next({ name: 'login' });
+      }
+      return false;
+    }
+
+    // 获取用户信息
+    if (isEmpty(userStore.userInfo))
+      await userStore.getUserInfo();
 
     // 判断路由有无进行初始化
     if (!routeStore.isInitAuthRoute) {

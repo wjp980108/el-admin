@@ -11,3 +11,13 @@ export function login(data: AnyObj) {
     data,
   });
 }
+
+/**
+ * 获取用户信息
+ */
+export function userInfo() {
+  return request({
+    url: '/api/auth/info',
+    method: 'get',
+  });
+}
