@@ -6,7 +6,7 @@ import request from '@/utils/axios';
  */
 export function login(data: AnyObj) {
   return request({
-    url: '/auth/login',
+    url: '/api/auth/login',
     method: 'post',
     data,
   });

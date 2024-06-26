@@ -12,11 +12,15 @@ function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: Axi
   // 获取用户信息
   // const userStore = useUserStore();
 
-  // 创建 axios
-  const service = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL,
+  const serviceConfig = {
+    baseURL: '',
     timeout: 0,
-  });
+  };
+  if (import.meta.env.VITE_APP_ENV !== 'dev')
+    serviceConfig.baseURL = import.meta.env.VITE_BASE_URL;
+
+  // 创建 axios
+  const service = axios.create(serviceConfig);
 
   // 默认配置
   const config: AppAxios.Options = {
