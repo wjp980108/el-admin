@@ -18,15 +18,15 @@ const routeStore = useRouteStore();
 </script>
 
 <template>
-  <n-layout class="wh-full" embedded has-sider>
+  <n-layout class="wh-full" has-sider>
     <SideMenu />
     <n-layout>
       <n-layout-header bordered>
         <AppHeader />
         <TabBar />
       </n-layout-header>
-      <n-layout-content>
-        <n-scrollbar ref="scrollbar" class="bg-#F7FAFC" :style="maxHeight" content-class="p-4">
+      <n-layout-content embedded>
+        <n-scrollbar ref="scrollbar" :style="maxHeight" content-class="p-4">
           <router-view v-slot="{ Component, route }">
             <transition :name="appStore.transitionAnimation" mode="out-in">
               <keep-alive :include="routeStore.cacheRoutes">

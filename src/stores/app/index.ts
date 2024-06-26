@@ -2,6 +2,9 @@ import { useReset } from '@/hooks';
 
 const docEle = ref(document.documentElement);
 const { isFullscreen, toggle } = useFullscreen(docEle);
+const { system, store } = useColorMode({
+  emitAuto: true,
+});
 
 type TransitionAnimation = '' | 'fade-slide' | 'fade-bottom' | 'fade-scale' | 'zoom-fade' | 'zoom-out';
 
@@ -60,11 +63,25 @@ export const useAppStore = defineStore('app', () => {
     state.value.loadingText = options.loadingText;
   };
 
+  // 存储颜色模式
+  const storeColorMode = computed(() => store.value);
+  // 当前使用的颜色模式
+  const colorMode = computed(() => {
+    return store.value === 'auto' ? system.value : store.value;
+  });
+
+  const setColorMode = (mode: 'light' | 'dark' | 'auto') => {
+    store.value = mode;
+  };
+
   return {
     ...toRefs(state.value),
     fullscreen,
     toggleFullScreen,
     reloadPage,
     setLoading,
+    storeColorMode,
+    colorMode,
+    setColorMode,
   };
 });
