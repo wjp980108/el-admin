@@ -7,9 +7,13 @@
     "dev": "vite --mode dev",
     "dev:test": "vite --mode test",
     "dev:prod": "vite --mode prod",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build-dev": "run-p type-check build-only-dev",
+    "build-test": "run-p type-check build-only-test",
+    "build": "run-p type-check build-only",
     "preview": "vite preview",
-    "build-only": "vite build",
+    "build-only-dev": "vite build --mode dev",
+    "build-only-test": "vite build --mode test",
+    "build-only": "vite build --mode prod",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -56,11 +60,6 @@
     "vite": "^5.3.1",
     "vite-plugin-vue-devtools": "^7.3.4",
     "vue-tsc": "^2.0.11"
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-git"
-    }
   },
   "lint-staged": {
     "*.{vue,js,ts,jsx,tsx,scss}": "eslint --fix"
