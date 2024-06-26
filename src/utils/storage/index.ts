@@ -9,13 +9,13 @@ const createOptions: OptionType = {
 };
 
 export const storage = createStorage({
-  name: 'erpStorage',
-  description: '进销存全局本地存储',
+  name: 'appStorage',
+  description: '全局本地存储',
   ...createOptions,
 });
 
 export const tableStorage = createStorage({
   name: 'tableStorage',
-  description: '进销存表格本地存储',
+  description: '表格本地存储',
   ...createOptions,
 });
