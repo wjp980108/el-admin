@@ -30,6 +30,7 @@
     "qs": "^6.12.1",
     "radash": "^12.1.0",
     "vue": "^3.4.30",
+    "vue-draggable-plus": "^0.5.0",
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
