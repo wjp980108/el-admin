@@ -16,22 +16,22 @@ const checked = ref(false);
 const disabled = ref(false);
 
 const rules: FormRules = {
-  userName: [
+  username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
   ],
-  userPwd: [
+  password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
   ],
 };
 
 interface State {
-  userName: string
-  userPwd: string
+  username: string
+  password: string
 }
 
 const state = reactive({
-  userName: '',
-  userPwd: '',
+  username: 'admin',
+  password: '123456',
 });
 
 // 获取用户账号
@@ -42,8 +42,8 @@ async function getUserConfig() {
     if (!rss)
       return;
 
-    state.userName = rss.userName;
-    state.userPwd = rss.userPwd;
+    state.username = rss.username;
+    state.password = rss.password;
     checked.value = true;
   }
   catch (e) {
@@ -119,12 +119,12 @@ useEventListener(document, 'keypress', ({ code }) => {
           </h2>
           <el-form ref="formRef" :model="state" :rules="rules" size="large">
             <el-form-item prop="username">
-              <el-input v-model="state.userName" clearable placeholder="账号" :prefix-icon="renderIcon('UserFilled')" />
+              <el-input v-model="state.username" clearable placeholder="账号" :prefix-icon="renderIcon('UserFilled')" />
             </el-form-item>
             <el-form-item prop="password">
               <el-input
-                v-model="state.userPwd" placeholder="密码" :prefix-icon="renderIcon('bxs:lock')"
-                clearable show-password
+                v-model="state.password" placeholder="密码" :prefix-icon="renderIcon('bxs:lock')" clearable
+                show-password
               />
             </el-form-item>
             <el-form-item>
@@ -144,7 +144,9 @@ useEventListener(document, 'keypress', ({ code }) => {
         </div>
       </div>
     </div>
-    <div class="absolute bottom-12 w-full flex-center text-14 text-[rgba(0,0,0,0.6)] line-height-14 dark:text-[rgba(220,220,242,0.8)]">
+    <div
+      class="absolute bottom-12 w-full flex-center text-14 text-[rgba(0,0,0,0.6)] line-height-14 dark:text-[rgba(220,220,242,0.8)]"
+    >
       Copyright © 2024-{{ dayjs().year() }}
       <el-link href="https://yserp.cc/#/home" target="_blank" :underline="false">
         &nbsp;智选云商
@@ -201,9 +203,9 @@ useEventListener(document, 'keypress', ({ code }) => {
         margin: 15px 0;
         color: #999;
         font:
-            bold 200% Consolas,
-            Monaco,
-            monospace;
+          bold 200% Consolas,
+          Monaco,
+          monospace;
       }
 
     }
