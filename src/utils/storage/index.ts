@@ -4,7 +4,7 @@ import { createStorage } from '@/utils/storage/storage';
 type OptionType = Optional<CreateStorageParams, 'name' | 'description'>;
 
 const createOptions: OptionType = {
-  prefixKey: `${import.meta.env.VITE_APP_TITLE}__`,
+  prefixKey: `${import.meta.env.VITE_APP_PREFIX}__`,
   timeout: null,
 };
 

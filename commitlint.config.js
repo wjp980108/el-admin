@@ -15,46 +15,16 @@ export default {
       confirmCommit: '是否提交commit ?',
     },
     types: [
-      {
-        value: 'feat',
-        name: 'feat:     新增功能 | 一个新的功能',
-      },
-      {
-        value: 'fix',
-        name: 'fix:      错误修复 | 修复一个bug',
-      },
-      {
-        value: 'style',
-        name: 'style:    格式修改 | 不影响功能，例如空格、格式化、分号等',
-      },
-      {
-        value: 'refactor',
-        name: 'refactor: 代码重构 | 既不修复错误也不添加功能的代码更改',
-      },
-      {
-        value: 'perf',
-        name: 'perf:     代码优化 | 提高性能的代码更改',
-      },
-      {
-        value: 'test',
-        name: 'test:     测试相关 | 添加测试或更新现有测试',
-      },
-      {
-        value: 'build',
-        name: 'build:    构建相关 | 构建工具或外部依赖项的更改',
-      },
-      {
-        value: 'ci',
-        name: 'ci:       CI 配置  | 对 CI 配置文件和脚本的更改',
-      },
-      {
-        value: 'chore',
-        name: 'chore:    其他修改 | 其他不修改源代码的更改',
-      },
-      {
-        value: 'revert',
-        name: 'revert:   代码回退 | 撤销一个历史提交',
-      },
+      { value: 'feat', name: 'feat:     新功能' },
+      { value: 'fix', name: 'fix:      修复问题' },
+      { value: 'docs', name: 'docs:     文档更改' },
+      { value: 'style', name: 'style:    格式（不影响代码运行的变动）' },
+      { value: 'refactor', name: 'refactor: 重构（即不是新增功能，也不是修改bug的代码变动）' },
+      { value: 'perf', name: 'perf:     性能优化' },
+      { value: 'build', name: 'build:    影响构建系统或外部依赖的变更（例如：vite，npm）' },
+      { value: 'ci', name: 'ci:       对 CI 配置文件和脚本的更改（例如：Travis, Circle, BrowserStack, SauceLabs）' },
+      { value: 'chore', name: 'chore:    其他修改（不修改src目录或测试文件的修改）' },
+      { value: 'revert', name: 'revert:   撤销之前的提交' },
     ],
     // 是否开启emoji表情
     useEmoji: false,
@@ -62,13 +32,16 @@ export default {
     scopes: [
       'pages',
       'components',
+      'constants',
+      'directives',
+      'stores',
+      'router',
       'utils',
       'hooks',
       'styles',
       'config',
       'assets',
       'types',
-      'test',
       'docs',
       'other',
     ],
@@ -77,7 +50,7 @@ export default {
     // 是否在选择“模块范围”中显示“空（empty）”选项
     allowEmptyScopes: false,
     // 允许出现的非兼容性重大的变更的 type
-    allowBreakingChanges: ['feat', 'fix', 'refactor', 'chore'],
+    allowBreakingChanges: ['feat', 'fix', 'refactor'],
     // 定义 header 长度
     maxHeaderLength: 79,
   },

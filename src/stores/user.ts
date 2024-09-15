@@ -1,25 +1,27 @@
-import { useReset } from '@/hooks';
 import { userInfo } from '@/api';
+import { useReset } from '@/hooks';
 
-export const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore('user-store', () => {
   const [state] = useReset({
     userInfo: {},
     accessToken: '',
   });
 
   // 设置 token
-  const setToken = async (token: string) => {
+  const setToken = (token: string) => {
     state.value.accessToken = token;
   };
 
   // 清空 token
-  const removeToken = async () => {
+  const removeToken = () => {
     state.value.accessToken = '';
   };
 
   // 获取用户信息
   const getUserInfo = async () => {
-    state.value.userInfo = await userInfo();
+    const res = await userInfo();
+    state.value.userInfo = res.data.userInfo;
+    return res;
   };
 
   return {
@@ -29,5 +31,7 @@ export const useUserStore = defineStore('user', () => {
     getUserInfo,
   };
 }, {
-  persist: true,
+  persist: {
+    pick: ['accessToken'],
+  },
 });

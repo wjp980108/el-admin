@@ -1,0 +1,9 @@
+html.dark {
+  --app-bezier: cubic-bezier(.4, 0, .2, 1);
+  --app-toggle-bar-color: rgba(64, 64, 67, 1);
+  --app-toggle-bar-color-hover: rgba(88, 88, 91, 1);
+
+  .el-card {
+    --el-card-bg-color: var(--el-bg-color) !important;
+  }
+}

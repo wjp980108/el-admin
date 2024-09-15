@@ -1,11 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router';
 import type { App } from 'vue';
-import { createDiscreteApi } from 'naive-ui';
-import { isEmpty } from 'radash';
+import NProgress from '@/config/nprogress';
 import { routes } from '@/router/routes.inner';
 import { useRouteStore, useTabStore, useUserStore } from '@/stores';
-
-const { loadingBar } = createDiscreteApi(['loadingBar']);
+import { createRouter, createWebHistory } from 'vue-router';
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,8 +15,7 @@ export async function installRouter(app: App) {
   const userStore = useUserStore();
 
   router.beforeEach(async (to, from, next) => {
-    // 开始 loadingBar
-    loadingBar.start();
+    NProgress.start();
 
     // 是否已经登录过
     if (!userStore.accessToken) {
@@ -31,10 +27,6 @@ export async function installRouter(app: App) {
       }
       return false;
     }
-
-    // 获取用户信息
-    if (isEmpty(userStore.userInfo))
-      await userStore.getUserInfo();
 
     // 判断路由有无进行初始化
     if (!routeStore.isInitAuthRoute) {
@@ -59,7 +51,7 @@ export async function installRouter(app: App) {
 
   router.beforeResolve((to) => {
     // 设置菜单高亮
-    routeStore.setActiveMenu(to.meta.activeMenu ?? to.fullPath);
+    routeStore.setActiveMenu(to.meta.activeMenu || to.fullPath);
 
     // 添加 tag
     tabStore.addTab(to);
@@ -72,8 +64,8 @@ export async function installRouter(app: App) {
     // 修改网页标题
     document.title = `${to.meta.title} - ${import.meta.env.VITE_APP_NAME}`;
 
-    // 结束 loadingBar
-    loadingBar.finish();
+    // 结束 NProgress
+    NProgress.done();
   });
 
   app.use(router);

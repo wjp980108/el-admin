@@ -1,49 +1,58 @@
 <script setup lang="ts">
-import SideMenu from '@/layouts/components/SideMenu/index.vue';
-import TabBar from '@/layouts/components/TabBar/index.vue';
-import AppHeader from '@/layouts/components/AppHeader/index.vue';
+import LayHeader from '@/layouts/components/LayHeader.vue';
+import LaySideMenu from '@/layouts/components/LaySideMenu.vue';
+import LayTabs from '@/layouts/components/LayTabs/index.vue';
 import { useAppStore, useRouteStore } from '@/stores';
 
 defineOptions({ name: 'Layout' });
-const maxHeight = 'height: calc(100vh - 60px - 45px)';
-
-const scrollbar = ref();
-
-function target() {
-  return scrollbar.value!.scrollbarInstRef.containerRef;
-}
 
 const appStore = useAppStore();
 const routeStore = useRouteStore();
+
+const {
+  transitionAnimation,
+  loadFlag,
+  watermark,
+  isDark,
+} = storeToRefs(appStore);
+
+const watermarkConfig = reactive({
+  content: '智选云商',
+  font: {
+    fontSize: 16,
+    color: 'rgba(0, 0, 0, .15)',
+  },
+});
+
+watchEffect(() => {
+  watermarkConfig.font.color = isDark.value ? 'rgba(255, 255, 255, .15)' : 'rgba(0, 0, 0, .15)';
+});
 </script>
 
 <template>
-  <n-layout class="wh-full" has-sider>
-    <SideMenu />
-    <n-layout>
-      <n-layout-header bordered>
-        <AppHeader />
-        <TabBar />
-      </n-layout-header>
-      <n-layout-content embedded>
-        <n-scrollbar ref="scrollbar" :style="maxHeight" content-class="p-4">
-          <router-view v-slot="{ Component, route }">
-            <transition :name="appStore.transitionAnimation" mode="out-in">
-              <keep-alive :include="routeStore.cacheRoutes">
-                <component :is="Component" v-if="appStore.loadFlag" :key="route.fullPath" />
-              </keep-alive>
-            </transition>
-          </router-view>
-        </n-scrollbar>
-      </n-layout-content>
-    </n-layout>
-    <n-back-top :listen-to="target">
-      <n-tooltip>
-        返回顶部
-        <template #trigger>
-          <app-icon icon="ic:round-vertical-align-top" :size="26" />
-        </template>
-      </n-tooltip>
-    </n-back-top>
-  </n-layout>
+  <el-watermark class="wh-full" :content="watermark ? watermarkConfig.content : ''" :font="watermarkConfig.font">
+    <el-container>
+      <LaySideMenu />
+      <el-container>
+        <el-header>
+          <LayHeader />
+          <LayTabs />
+        </el-header>
+        <el-scrollbar class="flex-box" wrap-class="flex-box" view-class="flex-box">
+          <el-main class="flex-box bg-[var(--el-bg-color-page)]" style="--el-main-padding: 16px">
+            <router-view v-slot="{ Component, route }">
+              <transition :name="transitionAnimation" mode="out-in" appear>
+                <keep-alive :include="routeStore.cacheRoutes">
+                  <component :is="Component" v-if="loadFlag" :key="route.fullPath" />
+                </keep-alive>
+              </transition>
+            </router-view>
+          </el-main>
+        </el-scrollbar>
+        <el-tooltip content="返回顶部" placement="top">
+          <el-backtop target=".el-scrollbar .el-scrollbar__view" :bottom="120" />
+        </el-tooltip>
+      </el-container>
+    </el-container>
+  </el-watermark>
 </template>

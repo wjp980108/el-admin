@@ -1,30 +1,15 @@
 import type { RouteLocationNormalized } from 'vue-router';
-import type { ToRef, UnwrapRef } from 'vue';
 import { useReset } from '@/hooks';
 import { router } from '@/router';
 
 interface TabState {
   // tab列表
-  tabs: RouteLocationNormalized[]
+  tabs: AppRoute.Route[]
   // 当前tag路径
   currentTabPath: string
 }
 
-// 定义 useTabStore 的返回类型
-interface TabStore {
-  tabs: ToRef<UnwrapRef<TabState>['tabs']>
-  currentTabPath: ToRef<UnwrapRef<TabState>['currentTabPath']>
-  setCurrentTab: (path: string) => void
-  initTab: () => void
-  addTab: (route: RouteLocationNormalized) => void
-  closeTab: (path: string) => void
-  closeOtherTabs: (path: string) => void
-  closeLeftTabs: (path: string) => void
-  closeRightTabs: (path: string) => void
-  closeAllTabs: () => void
-}
-
-export const useTabStore = defineStore('tab', (): TabStore => {
+export const useTabStore = defineStore('tab-store', () => {
   const [state] = useReset<TabState>({
     tabs: [],
     currentTabPath: '',
@@ -39,7 +24,7 @@ export const useTabStore = defineStore('tab', (): TabStore => {
 
   // 判断标签是否已经存在
   const hasExistTab = (path: string) => {
-    const _tags: RouteLocationNormalized[] = [...state.value.tabs];
+    const _tags: AppRoute.Route[] = [...state.value.tabs];
     return _tags.some((item) => {
       return item.path === path;
     });
@@ -58,18 +43,22 @@ export const useTabStore = defineStore('tab', (): TabStore => {
   // 初始化标签-从路由中获取首页路由并添加到标签中
   const initTab = () => {
     const homeRoute: any = router.getRoutes().find(item => item.path === import.meta.env.VITE_HOME_PATH);
+    if (hasExistTab(homeRoute.path))
+      return;
+
     if (homeRoute)
       state.value.tabs.push(homeRoute!);
   };
 
   // 添加标签
   const addTab = (route: RouteLocationNormalized) => {
-    if (route.meta.withoutTab)
+    if (route.meta.isWithoutTab)
       return;
 
     if (hasExistTab(route.path))
       return;
-    state.value.tabs.push(route);
+
+    state.value.tabs.push(route as unknown as AppRoute.Route);
   };
 
   // 关闭当前标签
@@ -86,17 +75,11 @@ export const useTabStore = defineStore('tab', (): TabStore => {
         // 如果前边有标签，就跳转到前一个标签
         await router.push(state.value.tabs[index - 1].path);
       }
-      setTabs();
-    }
-    else {
-      setTabs();
     }
 
-    function setTabs() {
-      state.value.tabs = state.value.tabs.filter((item) => {
-        return item.path !== path;
-      });
-    }
+    state.value.tabs = state.value.tabs.filter((item) => {
+      return item.path !== path;
+    });
   };
 
   // 关闭其他标签
@@ -104,20 +87,13 @@ export const useTabStore = defineStore('tab', (): TabStore => {
     if (isTabReturn(path))
       return;
 
-    // 如果是当前选中的标签
-    if (path === currentTabPath.value) {
-      setTabs();
-    }
-    else {
+    // 如果不是当前选中的标签
+    if (path !== currentTabPath.value)
       await router.push(path);
-      setTabs();
-    }
 
-    function setTabs() {
-      state.value.tabs = state.value.tabs.filter((item) => {
-        return item.path === path || item.path === '/home';
-      });
-    }
+    state.value.tabs = state.value.tabs.filter((item) => {
+      return item.path === path || item.path === '/home';
+    });
   };
 
   // 关闭当前标签的左侧全部标签
@@ -125,12 +101,12 @@ export const useTabStore = defineStore('tab', (): TabStore => {
     if (isTabReturn(path))
       return;
 
-    const _tabs: RouteLocationNormalized[] = [...state.value.tabs];
+    const _tabs: AppRoute.Route[] = [...state.value.tabs];
     const index = getTabIndex(path);
 
     // 左侧是否有标签
     if (_tabs[index - 1] && _tabs[index - 1].path !== '/home') {
-      const removeTabs: RouteLocationNormalized[] = _tabs.splice(0, index);
+      const removeTabs: AppRoute.Route[] = _tabs.splice(0, index);
       const removeIndex = removeTabs.findIndex(item => item.path === currentTabPath.value);
 
       // 当前标签不是激活状态且关闭的标签中包含激活标签
@@ -146,7 +122,7 @@ export const useTabStore = defineStore('tab', (): TabStore => {
     if (isTabReturn(path))
       return;
 
-    const _tabs: RouteLocationNormalized[] = [...state.value.tabs];
+    const _tabs: AppRoute.Route[] = [...state.value.tabs];
     const index = getTabIndex(path);
 
     // 右侧是否有标签
@@ -183,4 +159,8 @@ export const useTabStore = defineStore('tab', (): TabStore => {
     closeRightTabs,
     closeAllTabs,
   };
+}, {
+  persist: {
+    storage: sessionStorage,
+  },
 });

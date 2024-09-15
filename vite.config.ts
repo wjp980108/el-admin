@@ -1,13 +1,12 @@
-import { URL, fileURLToPath } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import UnoCSS from 'unocss/vite';
 import AutoImport from 'unplugin-auto-import/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
-import vueDevTools from 'vite-plugin-vue-devtools';
+import { defineConfig, loadEnv } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -26,22 +25,15 @@ export default defineConfig(({ mode }) => {
           'vue-router',
           'pinia',
           '@vueuse/core',
-          {
-            'naive-ui': [
-              'useDialog',
-              'useMessage',
-              'useNotification',
-              'useLoadingBar',
-            ],
-          },
         ],
+        resolvers: [ElementPlusResolver()],
       }),
       Components({
         dts: 'src/typings/components.d.ts',
+        extensions: ['vue', 'tsx'],
         dirs: ['src/components'],
-        resolvers: [NaiveUiResolver()],
+        resolvers: [ElementPlusResolver()],
       }),
-      vueDevTools(),
     ],
     resolve: {
       alias: {

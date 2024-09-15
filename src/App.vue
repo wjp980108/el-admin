@@ -1,25 +1,22 @@
 <script setup lang="ts">
-import { darkTheme } from 'naive-ui';
-import { naiveI18nOptions } from '@/utils';
-import NaiveProvider from '@/components/NaiveProvider/index.vue';
+import { useTheme } from '@/hooks';
 import { useAppStore } from '@/stores';
+// import en from 'element-plus/es/locale/lang/en';
+import zhCn from 'element-plus/es/locale/lang/zh-cn';
 
-const naiveLocale = computed(() => {
-  return 'zhCN' ? naiveI18nOptions.zhCN : naiveI18nOptions.enUS;
+const locale = computed(() => {
+  // return 'zhCN' ? zhCn : en;
+  return zhCn;
 });
 
 const appStore = useAppStore();
+
+const { initTheme } = useTheme();
+onMounted(initTheme);
 </script>
 
 <template>
-  <n-config-provider
-    class="wh-full" :theme="appStore.colorMode === 'dark' ? darkTheme : null"
-    :locale="naiveLocale.locale" :date-locale="naiveLocale.dateLocale"
-  >
-    <NaiveProvider>
-      <n-spin class="wh-full" content-class="wh-full" :show="appStore.loadingShow" :description="appStore.loadingText">
-        <router-view />
-      </n-spin>
-    </NaiveProvider>
-  </n-config-provider>
+  <el-config-provider :locale :size="appStore.size" :message="{ max: 1 }">
+    <router-view />
+  </el-config-provider>
 </template>

@@ -12,8 +12,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'login',
     meta: {
       title: '登录',
-      icon: 'icon-park-outline:ghost',
-      withoutTab: true,
+      isWithoutTab: true,
     },
     component: () => import('@/views/login/index.vue'),
   },
@@ -23,7 +22,6 @@ export const routes: RouteRecordRaw[] = [
     meta: {
       title: '找不到页面',
       icon: 'icon-park-outline:ghost',
-      withoutTab: true,
     },
     component: () => import('@/views/error/404/index.vue'),
   },
@@ -33,7 +31,6 @@ export const routes: RouteRecordRaw[] = [
     meta: {
       title: '找不到页面',
       icon: 'icon-park-outline:ghost',
-      withoutTab: true,
     },
     component: () => import('@/views/error/404/index.vue'),
   },

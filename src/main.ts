@@ -1,9 +1,9 @@
-import { createApp } from 'vue';
-import '@/styles/index';
-import App from './App.vue';
+import { setupGlobalDirectives } from '@/directives';
 import { installRouter } from '@/router';
 import { installPinia } from '@/stores';
-import { setupGlobalDirectives } from '@/directives';
+import { createApp } from 'vue';
+import App from './App.vue';
+import '@/styles/index';
 
 async function setupApp() {
   // 创建vue实例

@@ -64,6 +64,7 @@ export function createStorage(params: CreateStorageParams) {
         return value;
       }
       catch (e) {
+        console.error(e);
         return def;
       }
     }

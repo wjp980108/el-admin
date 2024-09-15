@@ -1,141 +1,162 @@
 <script setup lang="ts">
+import { computed, type PropType } from 'vue';
+
 defineOptions({ name: 'AppPopup' });
 
-const props = withDefaults(defineProps<Props>(), {
-  show: false,
-  title: '弹窗',
-  positiveText: '确定',
-  negativeText: '取消',
-  width: 175,
-  height: '',
-  maxHeight: 100,
-});
-
-const emits = defineEmits(['update:show', 'close', 'submit']);
-
-interface Props {
-  // 是否显示弹窗
-  show: boolean
-  // 弹窗标题
-  title?: string
-  // 确定按钮文本
-  positiveText?: string
-  // 取消按钮文本
-  negativeText?: string
-  // 弹窗宽度（使用的是 unocss 单位）
-  width?: string | number
-  // 弹窗内容高度（使用的是 unocss 单位）
-  height?: string | number
-  // 弹窗内容最大高度（使用的是 unocss 单位）
-  maxHeight?: string | number
-}
-
-const showModal = computed({
-  get: () => props.show,
-  set: (val: boolean) => {
-    emits('update:show', val);
+const props = defineProps({
+  title: {
+    type: String,
+    default: '弹窗',
+  },
+  width: {
+    type: [String, Number],
+    default: 600,
+  },
+  height: {
+    type: [String, Number],
+    default: '',
+  },
+  maxHeight: {
+    type: [String, Number],
+    default: 500,
+  },
+  headerBorder: {
+    type: Boolean,
+    default: true,
+  },
+  draggable: {
+    type: Boolean,
+    default: true,
+  },
+  closeOnClickModal: {
+    type: Boolean,
+    default: false,
+  },
+  confirmText: {
+    type: String,
+    default: '保存',
+  },
+  showFooter: {
+    type: Boolean,
+    default: true,
+  },
+  showConfirmButton: {
+    type: Boolean,
+    default: true,
+  },
+  cancelText: {
+    type: String,
+    default: '取消',
+  },
+  showCancelButton: {
+    type: Boolean,
+    default: true,
+  },
+  buttonReverse: {
+    type: Boolean,
+    default: false,
+  },
+  footerPosition: {
+    type: String as PropType<'left' | 'center' | 'right' | 'space-between'>,
+    default: 'right',
   },
 });
 
-// 弹窗样式
-const popupStyle = computed(() => {
-  // 公式：1px / 16px / 4单位 = 0.015625rem
-  const unitList = ['px', 'vw', '%'];
-  const widthIncludesUnit = unitList.some(unit => props.width.toString().includes(unit));
+const emit = defineEmits(['confirm', 'cancel']);
 
-  if (widthIncludesUnit) {
-    return `width: ${props.width}`;
-  }
-
-  return `width: ${Number(props.width) / 4}rem`;
+const isPopup = defineModel({
+  type: Boolean,
+  default: false,
 });
 
-const contentStyle = computed(() => {
-  // 公式：1px / 16px / 4单位 = 0.015625rem
-  const unitList = ['px', 'vh', '%'];
-  let height = props.height && `height: ${Number(props.height) / 4}rem`;
-  const heightIncludesUnit = unitList.some(unit => props.height.toString().includes(unit));
-
-  if (heightIncludesUnit) {
-    height = `max-height: ${props.height}`;
-  }
-
-  let maxHeight = props.maxHeight && `max-height: ${Number(props.maxHeight) / 4}rem`;
-  const maxHeightIncludesUnit = unitList.some(unit => props.maxHeight.toString().includes(unit));
-
-  if (maxHeightIncludesUnit) {
-    maxHeight = `max-height: ${props.maxHeight}`;
-  }
-
-  return [height, maxHeight];
+// 是否是翻转
+const isReverse = computed(() => {
+  return props.showCancelButton && props.buttonReverse;
 });
 
-// 弹窗拖拽，因存在性能问题，暂时不使用
-// const obj = ref({})
-//
-// function handleAfterEnterer() {
-//   obj.value = useDraggable(document.querySelector('.app-popup'), {
-//     initialValue: { x: 0, y: 0 },
-//   })
-// }
-
-// 点击取消按钮
-function handleClose() {
-  showModal.value = false;
-  emits('close');
+// 点击确认
+function onConfirm() {
+  emit('confirm');
 }
 
-// 点击取消按钮
-function handleSubmit() {
-  emits('submit');
+// 点击取消
+function onCancel() {
+  isPopup.value = false;
+  emit('cancel');
 }
+
+onMounted(() => {
+  // 头部是否需要边框线
+  const border = props.headerBorder ? '1px' : '0';
+  document.documentElement.style.setProperty('--app-popup-header-border', border);
+
+  // 底部按钮位置
+  document.documentElement.style.setProperty('--app-popup-footer-position', props.footerPosition);
+});
 </script>
 
-<!-- :style="[{ -->
-<!-- transform: `translate(${obj.x}px, ${obj.y}px)`, -->
-<!-- }, popupStyle]" -->
 <template>
-  <n-modal
-    v-model:show="showModal"
+  <el-dialog
+    v-model="isPopup"
     class="app-popup"
-    header-class="popup-header"
-    content-style="padding-right: 0.375rem"
-    :style="popupStyle"
-    preset="card"
     v-bind="$attrs"
-    size="small"
-    :segmented="{
-      content: true,
-      footer: true,
-    }"
-    :auto-focus="false"
+    :close-on-click-modal="closeOnClickModal"
+    :title :width :draggable destroy-on-close
+    @close="onCancel"
   >
     <template #header>
-      <slot name="header">
-        {{ title }}
-      </slot>
+      <slot name="header" />
     </template>
-    <n-scrollbar class="pr-5" :style="contentStyle">
-      <slot />
-    </n-scrollbar>
-    <template #footer>
+    <template #default>
+      <el-scrollbar view-class="dialog-scrollbar-view" :height :max-height="maxHeight">
+        <slot />
+      </el-scrollbar>
+    </template>
+    <template v-if="showFooter" #footer>
       <slot name="footer">
-        <n-space justify="end">
-          <n-button @click="handleClose">
-            {{ negativeText }}
-          </n-button>
-          <n-button type="primary" @click="handleSubmit">
-            {{ positiveText }}
-          </n-button>
-        </n-space>
+        <el-button v-if="showConfirmButton" :class="{ 'button-reverse': isReverse }" type="primary" @click="onConfirm">
+          {{ confirmText }}
+        </el-button>
+        <el-button v-if="showCancelButton" @click="onCancel">
+          {{ cancelText }}
+        </el-button>
       </slot>
     </template>
-  </n-modal>
+  </el-dialog>
 </template>
 
 <style lang="scss">
-.popup-header {
-  //user-select: none;
-  //cursor: move;
+.el-dialog.app-popup {
+  padding: 0;
+
+  .el-dialog__header {
+    height: 45px;
+    padding: 10px;
+    border-bottom: var(--app-popup-header-border) solid var(--el-border-color);
+  }
+
+  .el-dialog__body {
+    .el-scrollbar {
+      .dialog-scrollbar-view {
+        padding: 10px 15px;
+      }
+    }
+  }
+
+  .el-dialog__footer {
+    display: flex;
+    justify-content: var(--app-popup-footer-position);
+    padding: 10px;
+    box-shadow: var(--el-box-shadow);
+
+    .button-reverse {
+      order: 1;
+      margin-left: 12px;
+
+      & + .el-button {
+        margin-left: 0;
+      }
+    }
+  }
 }
 </style>

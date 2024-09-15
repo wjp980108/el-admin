@@ -1,23 +1,19 @@
 <script setup lang="ts">
-import type { FormInst, FormRules } from 'naive-ui';
-import { useRouteStore, useUserStore } from '@/stores';
+import type { FormInstance, FormRules } from 'element-plus';
 import { login } from '@/api';
-import { storage } from '@/utils';
-import logo from '@/assets/logo.svg';
+import avatar from '@/assets/login/avatar.svg';
+import bg from '@/assets/login/bg.png';
+import illustration from '@/assets/login/illustration.svg';
+import { Constant } from '@/constants';
+import { useRouteStore, useUserStore } from '@/stores';
+import { renderIcon, storage } from '@/utils';
+import dayjs from 'dayjs';
 
 defineOptions({ name: 'Login' });
 
-const routeStore = useRouteStore();
-
-interface State {
-  userName: string
-  userPwd: string
-}
-
-const state = reactive<State>({
-  userName: '',
-  userPwd: '',
-});
+const loading = ref(false);
+const checked = ref(false);
+const disabled = ref(false);
 
 const rules: FormRules = {
   userName: [
@@ -28,103 +24,233 @@ const rules: FormRules = {
   ],
 };
 
-const isRemember = ref(false);
-const isLoading = ref(false);
+interface State {
+  userName: string
+  userPwd: string
+}
+
+const state = reactive({
+  userName: '',
+  userPwd: '',
+});
 
 // 获取用户账号
 async function getUserConfig() {
   try {
-    const rss = await storage.getItem<State>('loginAccount', '');
+    const rss = await storage.getItem<State>(Constant.LoginAccount, '');
 
     if (!rss)
       return;
 
     state.userName = rss.userName;
     state.userPwd = rss.userPwd;
-    isRemember.value = true;
+    checked.value = true;
   }
   catch (e) {
-    console.error('获取用户账号失败');
+    console.error(e);
   }
 }
 
 onMounted(getUserConfig);
 
 const userStore = useUserStore();
-
-const formRef = ref<FormInst | null>(null);
-
+const routeStore = useRouteStore();
 const router = useRouter();
-const notification = useNotification();
+const formRef = ref<FormInstance | null>(null);
 
 // 点击登录
 function handleLogin() {
-  formRef.value?.validate(async (errors) => {
-    if (errors)
+  formRef.value?.validate(async (valid) => {
+    if (!valid)
       return;
 
-    isLoading.value = true;
+    loading.value = true;
+    disabled.value = true;
     try {
-      if (isRemember.value) {
-        await storage.setItem('loginAccount', state);
+      if (checked.value) {
+        await storage.setItem(Constant.LoginAccount, state);
       }
       else {
-        await storage.removeItem('loginAccount');
+        await storage.removeItem(Constant.LoginAccount);
       }
 
       const res = await login(state);
-      await userStore.setToken(res.token);
+      userStore.setToken(res.data.token);
       await routeStore.initAuthRoute();
-      await router.push('/');
-      notification.success({
-        content: '登录成功',
-        title: '想不出来',
-        duration: 2500,
+      router.push('/').then(() => {
+        ElNotification.success({
+          title: '登录成功',
+          message: '欢迎回来',
+          duration: 2500,
+        });
+      }).finally(() => {
+        disabled.value = false;
       });
     }
     finally {
-      isLoading.value = false;
+      loading.value = false;
+      disabled.value = false;
     }
   });
 }
+
+// 回车登录
+useEventListener(document, 'keypress', ({ code }) => {
+  if (['Enter', 'NumpadEnter'].includes(code) && !disabled.value && !loading.value)
+    handleLogin();
+});
 </script>
 
 <template>
-  <n-el class="wh-full flex-center bg-[var(--body-color)]">
-    <n-card class="w-112.5 shadow-[var(--n-box-shadow)]">
-      <template #header>
-        <n-space align="center">
-          <n-image :width="60" :src="logo" preview-disabled />
-          <h2>
-            登录
+  <div class="select-none">
+    <img :src="bg" class="wave" alt="">
+    <div class="flex-c absolute right-5 top-3">
+      <app-theme-switch />
+    </div>
+    <div class="login-container">
+      <div class="img">
+        <img :src="illustration" alt="">
+      </div>
+      <div class="login-box">
+        <div class="login-form">
+          <img class="avatar" :src="avatar" alt="">
+          <h2 class="outline-none">
+            运营平台
           </h2>
-        </n-space>
-      </template>
-      <n-form ref="formRef" :model="state" :rules="rules" :show-label="false">
-        <n-form-item path="userName">
-          <n-input v-model:value="state.userName" placeholder="请输入用户名" clearable />
-        </n-form-item>
-        <n-form-item path="userPwd">
-          <n-input v-model:value="state.userPwd" type="password" placeholder="请输入密码" show-password-on="mousedown" clearable />
-        </n-form-item>
-        <n-space vertical :size="20">
-          <div class="flex-y-center justify-between">
-            <n-checkbox v-model:checked="isRemember">
-              记住我
-            </n-checkbox>
-            <n-button type="primary" text>
-              忘记密码?
-            </n-button>
-          </div>
-          <n-button type="primary" size="large" :loading="isLoading" :disabled="isLoading" block @click="handleLogin">
-            登录
-          </n-button>
-        </n-space>
-      </n-form>
-    </n-card>
-  </n-el>
+          <el-form ref="formRef" :model="state" :rules="rules" size="large">
+            <el-form-item prop="username">
+              <el-input v-model="state.userName" clearable placeholder="账号" :prefix-icon="renderIcon('UserFilled')" />
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                v-model="state.userPwd" placeholder="密码" :prefix-icon="renderIcon('bxs:lock')"
+                clearable show-password
+              />
+            </el-form-item>
+            <el-form-item>
+              <div class="h-[20px] w-full flex items-center justify-between">
+                <el-checkbox v-model="checked">
+                  记住我
+                </el-checkbox>
+                <el-link type="primary" :underline="false">
+                  &nbsp;忘记密码？
+                </el-link>
+              </div>
+              <el-button class="mt-16 w-full" type="primary" size="default" :loading :disabled @click="handleLogin">
+                登录
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+    </div>
+    <div class="absolute bottom-12 w-full flex-center text-14 text-[rgba(0,0,0,0.6)] line-height-14 dark:text-[rgba(220,220,242,0.8)]">
+      Copyright © 2024-{{ dayjs().year() }}
+      <el-link href="https://yserp.cc/#/home" target="_blank" :underline="false">
+        &nbsp;智选云商
+      </el-link>
+    </div>
+  </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.wave {
+  position: fixed;
+  height: 100%;
+  width: 80%;
+  left: 0;
+  bottom: 0;
+}
 
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 18rem;
+  padding: 0 2rem;
+
+  .img {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    z-index: 1;
+
+    img {
+      width: 500px;
+    }
+  }
+
+  .login-box {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+
+    .login-form {
+      width: 360px;
+
+      .avatar {
+        width: 350px;
+        height: 80px;
+      }
+
+      h2 {
+        text-transform: uppercase;
+        margin: 15px 0;
+        color: #999;
+        font:
+            bold 200% Consolas,
+            Monaco,
+            monospace;
+      }
+
+    }
+  }
+}
+
+@media screen and (max-width: 1180px) {
+  .login-container {
+    grid-gap: 9rem;
+
+    .img {
+      img {
+        width: 360px;
+      }
+    }
+
+    .login-form {
+      width: 290px;
+
+      .avatar {
+        width: 280px;
+        height: 80px;
+      }
+
+      h2 {
+        font-size: 2.4rem;
+        margin: 8px 0;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 968px) {
+  .wave {
+    display: none;
+  }
+
+  .login-container {
+    grid-template-columns: 1fr;
+
+    .img {
+      display: none;
+    }
+
+    .login-box {
+      justify-content: center;
+    }
+  }
+}
 </style>

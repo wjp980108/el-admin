@@ -1,20 +1,27 @@
-import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import axios from 'axios';
-import qs from 'qs';
-import { createDiscreteApi } from 'naive-ui';
+import type { AxiosRequestConfig, AxiosResponse, CreateAxiosDefaults, InternalAxiosRequestConfig } from 'axios';
 import { router } from '@/router';
-import { useAppStore, useUserStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
+import axios from 'axios';
+import { ElLoading, ElMessage } from 'element-plus';
+import qs from 'qs';
 
 const pendingMap = new Map();
+let loading: any;
+let requestCount: number = 0;
 
-const { message: NMessage } = createDiscreteApi(['message']);
 function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: AxiosRequestConfig, options: AppAxios.Options = {}): T {
   // 获取用户信息
   const userStore = useUserStore();
 
-  const serviceConfig = {
+  const serviceConfig: CreateAxiosDefaults = {
     baseURL: '',
     timeout: 0,
+    paramsSerializer: (params) => {
+      const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([_, value]) => value != null),
+      );
+      return qs.stringify(filteredParams, { arrayFormat: 'repeat' });
+    },
   };
   if (import.meta.env.VITE_APP_ENV !== 'dev')
     serviceConfig.baseURL = import.meta.env.VITE_BASE_URL;
@@ -41,9 +48,12 @@ function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: Axi
       // console.log(config, '请求拦截器');
       removePending(config);
       // 取消重复请求
-      options.cancelDuplicateRequest && addPending(config);
+      if (options.cancelDuplicateRequest)
+        addPending(config);
+
       // 显示 Loading
-      options.loading && setLoading(true, options.loadingText);
+      if (options.loading)
+        createLoading(options.loadingText);
 
       // 自动携带 token
       if (userStore.accessToken) {
@@ -66,19 +76,23 @@ function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: Axi
       // 删除重复请求
       removePending(config);
       // 关闭loading
-      options.loading && setLoading(false);
+      if (options.loading)
+        closeLoading();
 
       // 登录过期
       if (data.status === 1) {
-        // userStore.removeToken();
+        userStore.removeToken();
         await router.push('/login');
-        NMessage.error(data.message);
+        ElMessage.error({
+          message: data.message,
+        });
         return Promise.reject(data);
       }
 
       // 提示错误信息
-      if (data.status && data.status !== 200) {
-        NMessage.error(data.message, {
+      if (data.status !== 200) {
+        ElMessage.error({
+          message: data.message,
           duration: 5000,
         });
         // 不等于 0 时, 页面中具体逻辑不执行
@@ -89,7 +103,7 @@ function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: Axi
       if (options.message) {
         // 自定义消息提示权重大于接口返回消息提示
         const message = options.messageText ? options.messageText : data.message;
-        NMessage.success(message);
+        ElMessage.success(message);
       }
 
       return data;
@@ -97,11 +111,17 @@ function createAxios<Data = any, T = AppAxios.ApiPromise<Data>>(axiosConfig: Axi
     (error) => {
       // console.log(error, '响应错误拦截器');
       // 删除重复请求
-      error.config && removePending(error.config);
+      if (error.config)
+        removePending(error.config);
+
       // 关闭loading
-      options.loading && setLoading(false);
+      if (options.loading)
+        closeLoading();
+
       // 处理错误状态码
-      options.showErrorMessage && httpErrorStatusHandle(error);
+      if (options.showErrorMessage)
+        httpErrorStatusHandle(error);
+
       return Promise.reject(error);
     },
   );
@@ -123,7 +143,7 @@ function getPendingKey(config: InternalAxiosRequestConfig) {
 }
 
 /**
- * 储存每个请求唯一值, 也就是cancel()方法, 用于取消请求
+ * 储存每个请求唯一值, 也就是 cancel() 方法, 用于取消请求
  */
 function addPending(config: InternalAxiosRequestConfig) {
   const pendingKey = getPendingKey(config);
@@ -149,21 +169,31 @@ function removePending(config: InternalAxiosRequestConfig) {
 }
 
 /**
- * 配置 Loading
+ * 创建 Loading
  */
-function setLoading(show: boolean, text?: string) {
-  const appStore = useAppStore();
-  appStore.setLoading({
-    loadingShow: show,
-    loadingText: text,
-  });
+function createLoading(text?: string) {
+  if (requestCount === 0) {
+    loading = ElLoading.service({
+      text,
+      background: 'rgba(0, 0, 0, 0.7)',
+    });
+    requestCount++;
+  }
+}
+
+/**
+ * 关闭 Loading
+ */
+function closeLoading() {
+  requestCount--;
+  if (requestCount === 0)
+    loading.close();
 }
 
 /**
  * 处理异常
  */
 function httpErrorStatusHandle(error: any) {
-  // console.log(error, 'error');
   // 处理被取消的请求
   if (axios.isCancel(error))
     return console.error(`自动取消重复请求${error.message}`);
@@ -218,5 +248,5 @@ function httpErrorStatusHandle(error: any) {
     message = '网络请求超时!';
   if (error.message.includes('Network'))
     message = window.navigator.onLine ? '服务器异常!' : '您已断开连接!';
-  NMessage.error(message);
+  ElMessage.error(message);
 }

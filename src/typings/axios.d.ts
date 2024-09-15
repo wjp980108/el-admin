@@ -2,6 +2,7 @@ declare namespace AppAxios {
   interface ResponseData<T = any> {
     status: number
     data: T
+    totals: number
     message: string
   }
 

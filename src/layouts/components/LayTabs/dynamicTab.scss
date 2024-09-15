@@ -1,0 +1,81 @@
+.dynamic-tab {
+  .tabs-menu {
+    :deep(.el-tabs) {
+      .el-tabs__header {
+        &:not(:has(.is-scrollable)) {
+          padding: 0 5px;
+        }
+
+        .el-tabs__nav-wrap {
+          position: absolute;
+          width: calc(100% - 10px);
+
+          &.is-scrollable {
+            width: 100%;
+            padding: 0 25px;
+          }
+
+          .el-tabs__nav {
+            .el-tabs__item {
+              border: none;
+
+              &::before {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                border-bottom: 2px solid var(--el-color-primary);
+                transition: width .2s ease;
+              }
+
+              &:hover {
+                .is-icon-close {
+                  margin-right: 5px;
+                }
+
+                &::before {
+                  width: 100%;
+                }
+              }
+
+              .tabs-item {
+                padding-left: 5px;
+              }
+
+              &.is-active {
+                .tabs-item {
+                  padding-left: 10px;
+                }
+
+                &::before {
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @keyframes schedule-in-width {
+    0% {
+      width: 0
+    }
+
+    to {
+      width: 100%
+    }
+  }
+
+  @keyframes schedule-out-width {
+    0% {
+      width: 100%
+    }
+
+    to {
+      width: 0
+    }
+  }
+}

@@ -2,3 +2,8 @@ import '@unocss/reset/eric-meyer.css';
 import '@unocss/reset/normalize.css';
 import '@/styles/index.scss';
 import 'virtual:uno.css';
+import 'element-plus/theme-chalk/src/message.scss';
+import 'element-plus/theme-chalk/src/message-box.scss';
+import 'element-plus/theme-chalk/src/notification.scss';
+import 'element-plus/theme-chalk/src/loading.scss';
+import 'element-plus/theme-chalk/dark/css-vars.css';
