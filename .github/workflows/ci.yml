@@ -21,24 +21,24 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'  # 确保使用与你项目兼容的 Node.js 版本
+          node-version: '20.x'
           cache: 'pnpm'
 
-      # Install pnpm
-      - name: Install pnpm
+      # Install pnpm via npm
+      - name: Install pnpm via npm
         run: npm install -g pnpm
 
       # Check pnpm version to verify installation
       - name: Check pnpm version
         run: pnpm --version
 
-      # Clean pnpm cache
-      - name: Clean pnpm cache
-        run: pnpm store prune
-
       # Install dependencies using pnpm
       - name: Install dependencies
         run: pnpm install
+
+      # Run tests
+      - name: Run tests
+        run: pnpm test
 
       # Build the project
       - name: Build the project
