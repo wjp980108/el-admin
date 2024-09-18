@@ -17,14 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Node.js environment
+      # Set up Node.js environment using .nvmrc
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
+          node-version-file: '.nvmrc'  # 确保你项目中有正确的 .nvmrc 文件
 
-      # Install pnpm via npm (skip npm lock file)
+      # Install pnpm globally via npm
       - name: Install pnpm
         run: npm install -g pnpm
 
