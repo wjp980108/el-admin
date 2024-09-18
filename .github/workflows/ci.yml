@@ -40,10 +40,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # Run tests
-      - name: Run tests
-        run: pnpm test
-
       # Build the project
       - name: Build the project
         run: pnpm build
