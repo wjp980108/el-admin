@@ -24,11 +24,9 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
 
-      # Enable Corepack and install pnpm
-      - name: Enable Corepack and install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
+      # Install pnpm via npm
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       # Check pnpm version to verify installation
       - name: Check pnpm version
@@ -43,5 +41,5 @@ jobs:
         run: pnpm test
 
       # Build the project
-      - name: Build the project  # 添加一个 name 来描述步骤
+      - name: Build the project
         run: pnpm build
