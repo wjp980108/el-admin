@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'  # 确保你项目中有正确的 .nvmrc 文件
+          node-version-file: '.nvmrc'
 
       # Install pnpm globally via npm
       - name: Install pnpm
@@ -56,11 +56,11 @@ jobs:
           echo "SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY"
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}  
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # Deploy to the server via SSH
-      - name: Deploy to Server via SSH
+      # Deploy to the Windows server via SSH and copy files
+      - name: Deploy to Server via SCP
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
@@ -69,7 +69,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
           # 使用 scp 将文件传输到 Windows 服务器的指定目录
-          scp -i private_key -o StrictHostKeyChecking=no -r dist/* $SERVER_USER@$SERVER_HOST:/C:/website/admin
-          # 在 Windows 服务器上通过 PowerShell 重启 Nginx
+          scp -i private_key -o StrictHostKeyChecking=no -r dist/* $SERVER_USER@$SERVER_HOST:C:\\website\\admin
+          # 使用 ssh 连接到 Windows 服务器并通过 PowerShell 重启 Nginx
           ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
           rm private_key
