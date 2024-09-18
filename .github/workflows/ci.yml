@@ -24,9 +24,11 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
 
-      # Install pnpm via npm
-      - name: Install pnpm via npm
-        run: npm install -g pnpm
+      # Enable Corepack and prepare pnpm
+      - name: Enable Corepack and install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
       # Check pnpm version to verify installation
       - name: Check pnpm version
@@ -41,5 +43,4 @@ jobs:
         run: pnpm test
 
       # Build the project
-      - name: Build the project
         run: pnpm build
