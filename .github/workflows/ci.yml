@@ -28,9 +28,21 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      # Check pnpm version to verify installation
+      - name: Check pnpm version
+        run: pnpm --version
+
+      # Clean pnpm cache
+      - name: Clean pnpm cache
+        run: pnpm store prune
+
       # Install dependencies using pnpm
       - name: Install dependencies
         run: pnpm install
+
+      # Run tests
+      - name: Run tests
+        run: pnpm test
 
       # Build the project
       - name: Build the project
