@@ -48,6 +48,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Debugging environment variables
+      - name: Debugging server connection
+        run: |
+          echo "SERVER_HOST: $SERVER_HOST"
+          echo "SERVER_USER: $SERVER_USER"
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}  
+
       # Deploy to the server via SSH
       - name: Deploy to Server via SSH
         env:
