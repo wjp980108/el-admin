@@ -22,9 +22,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          cache: 'npm'  # 由于 pnpm 出现问题，改用 npm 缓存机制
 
-      # Install pnpm via npm
+      # Install pnpm via npm (skip npm lock file)
       - name: Install pnpm
         run: npm install -g pnpm
 
