@@ -21,7 +21,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version-file: '.nvmdrc'
+          cache: 'npm'
 
       # Install pnpm via npm (skip npm lock file)
       - name: Install pnpm
