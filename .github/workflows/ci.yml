@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -38,3 +38,27 @@ jobs:
       # Build the project
       - name: Build the project
         run: pnpm build
+
+  deploy:
+    needs: build  # 确保只有在构建成功后才执行部署
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code again in the deploy step
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Deploy to the server via SSH
+      - name: Deploy to Server via SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SSH_HOST }}
+          SERVER_USER: ${{ secrets.SSH_USER }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key
+          chmod 600 private_key
+          # 使用 scp 将文件传输到 Windows 服务器的指定目录
+          scp -i private_key -r dist/* $SERVER_USER@$SERVER_HOST:/C:/website/admin
+          # 在 Windows 服务器上通过 PowerShell 重启 Nginx
+          ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
+          rm private_key
