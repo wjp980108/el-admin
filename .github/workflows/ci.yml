@@ -68,28 +68,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 下载 dist 目录
-      - name: Download dist directory
+      # 下载构建后的 artifact
+      - name: Download dist files
         uses: actions/download-artifact@v3
         with:
           name: dist
 
-      # 列出当前工作目录中的所有内容，包括子目录
-      - name: List all directories and files
-        run: ls -alhR
+      # 列出当前目录结构，确认构建后的文件
+      - name: List current directory
+        run: ls -alh
 
-      # Debugging server connection
-      - name: Debugging server connection
-        run: |
-          echo "SERVER_HOST: $SERVER_HOST"
-          echo "SERVER_USER: $SERVER_USER"
-          echo "SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY"
-        env:
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # 使用 scp 传输 dist 目录到服务器
+      # 确保这些构建文件传输到服务器
       - name: Deploy to Server via SCP
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -98,10 +87,10 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
-          # 在确认 dist 目录路径后，调整 scp 命令
-          scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
+          # 使用 scp 传输项目根目录下的文件到服务器
+          scp -i private_key -o StrictHostKeyChecking=no -r ./* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
+          # 重启 Nginx 服务
           ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
           rm private_key
-
 
 
