@@ -13,20 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v3
-
-      # 设置 pnpm 缓存路径
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pnpm-store
-            node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-  
 
       # Set up Node.js environment using .nvmrc
       - name: Set up Node.js
@@ -38,10 +26,6 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      # Check pnpm version to verify installation
-      - name: Check pnpm version
-        run: pnpm --version
-
       # Install dependencies using pnpm
       - name: Install dependencies
         run: pnpm install
@@ -50,15 +34,18 @@ jobs:
       - name: Build the project
         run: pnpm build
 
-      - name: List output files
-        run: ls -alh dist 
+      # 列出 dist 目录中的文件，确保构建后的产物文件存在
+      - name: List dist directory
+        run: ls -alh ./dist
 
       # 上传 dist 目录作为 artifact
       - name: Upload dist directory
         uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: ./dist  
+          path: ./dist
+          if-no-files-found: warn
+
 
   deploy:
     needs: build
