@@ -77,7 +77,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
           # 使用 scp 传输项目根目录下的文件到服务器
-          scp -i private_key -o StrictHostKeyChecking=no -r ./* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
+          scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
           # 重启 Nginx 服务
           ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
           rm private_key
