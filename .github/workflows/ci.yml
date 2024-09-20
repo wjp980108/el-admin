@@ -40,7 +40,7 @@ jobs:
         run: pnpm build
 
       - name: List output files
-        run: ls -alh  
+        run: ls -alh dist 
 
   deploy:
     needs: build  # 确保只有在构建成功后才执行部署
