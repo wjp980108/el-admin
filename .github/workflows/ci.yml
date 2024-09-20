@@ -17,6 +17,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 设置 pnpm 缓存路径
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-  
+
       # Set up Node.js environment using .nvmrc
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -67,9 +78,13 @@ jobs:
       - name: List current directory
         run: ls -alh
 
-      # 列出下载的 artifact 目录
-      - name: Find downloaded artifacts
+      # 查找 dist 目录
+      - name: Find dist directory
         run: find . -type d -name "dist"
+
+      # 列出 dist 目录中的文件，确保文件存在
+      - name: List dist directory
+        run: ls -alh ./dist
 
       - name: Debugging server connection
         run: |
@@ -81,6 +96,7 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      # 使用 scp 传输 dist 目录到服务器
       - name: Deploy to Server via SCP
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -91,6 +107,8 @@ jobs:
           chmod 600 private_key
           # 使用 scp 传输 dist 目录到服务器
           scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
+          # 重启 Nginx 服务
           ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
           rm private_key
+
 
