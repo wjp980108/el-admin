@@ -61,6 +61,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist
+          path: ./dist
 
       # 列出当前目录结构，确认构建后的文件
       - name: List current directory
