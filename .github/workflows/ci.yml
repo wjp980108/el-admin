@@ -74,17 +74,17 @@ jobs:
         with:
           name: dist
 
-      # 列出当前工作目录内容
+      # 列出当前目录结构
       - name: List current directory
         run: ls -alh
 
-      # 查找 dist 目录
+      # 使用 find 查找 dist 目录
       - name: Find dist directory
         run: find . -type d -name "dist"
 
       # 列出 dist 目录中的文件，确保文件存在
-      - name: List dist directory
-        run: ls -alh ./dist
+      - name: List dist directory files
+        run: find . -type f -name "*"
 
       - name: Debugging server connection
         run: |
@@ -105,10 +105,10 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
-          # 使用 scp 传输 dist 目录到服务器
+          # 确认 dist 目录位置后，调整路径
           scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
-          # 重启 Nginx 服务
           ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
           rm private_key
+
 
 
