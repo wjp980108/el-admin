@@ -39,6 +39,9 @@ jobs:
       - name: Build the project
         run: pnpm build
 
+      - name: List output files
+        run: ls -alh  
+
   deploy:
     needs: build  # 确保只有在构建成功后才执行部署
     runs-on: ubuntu-latest
