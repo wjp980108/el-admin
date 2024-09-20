@@ -63,9 +63,13 @@ jobs:
         with:
           name: dist
 
-      # 列出当前目录结构，检查 dist 是否成功下载
+      # 列出当前工作目录，检查 dist 是否下载
       - name: List current directory
         run: ls -alh
+
+      # 列出 dist 目录内容
+      - name: List dist directory
+        run: ls -alh ./dist
 
       - name: Debugging server connection
         run: |
@@ -77,7 +81,6 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 使用 scp 部署文件
       - name: Deploy to Server via SCP
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -86,11 +89,8 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
-          # 列出 dist 目录内容，确保文件存在
-          ls -alh ./dist
           # 使用 scp 传输 dist 目录到服务器
           scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
-          # 重启 Nginx 服务
           ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
           rm private_key
 
