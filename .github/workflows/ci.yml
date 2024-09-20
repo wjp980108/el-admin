@@ -71,8 +71,8 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
-          # 使用 scp 将文件传输到 Windows 服务器的指定目录
+          pwd
+          ls -alh
           scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
-          # 使用 ssh 连接到 Windows 服务器并通过 PowerShell 重启 Nginx
           ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
           rm private_key
