@@ -38,13 +38,14 @@ jobs:
       - name: List dist directory
         run: ls -alh ./dist
 
-      # 上传 dist 目录作为 artifact
       - name: Upload dist directory
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: ./dist
           if-no-files-found: warn
+        env:
+          ACTIONS_STEP_DEBUG: true
 
 
   deploy:
