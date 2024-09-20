@@ -42,6 +42,13 @@ jobs:
       - name: List output files
         run: ls -alh dist 
 
+      # 上传 dist 目录作为 artifact
+      - name: Upload dist directory
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: ./dist  
+
   deploy:
     needs: build  # 确保只有在构建成功后才执行部署
     runs-on: ubuntu-latest
@@ -50,6 +57,12 @@ jobs:
       # Checkout the repository code again in the deploy step
       - name: Checkout code
         uses: actions/checkout@v3
+
+      # 下载 dist 目录
+      - name: Download dist directory
+        uses: actions/download-artifact@v3
+        with:
+          name: dist  
 
       # Debugging environment variables
       - name: Debugging server connection
