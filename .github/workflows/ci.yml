@@ -49,48 +49,49 @@ jobs:
           name: dist
           path: ./dist  
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
+ deploy:
+  needs: build
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # 下载 dist 目录
-      - name: Download dist directory
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
+    # 下载 dist 目录
+    - name: Download dist directory
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
 
-      # 列出当前工作目录，检查 dist 是否下载
-      - name: List current directory
-        run: ls -alh
+    # 列出当前工作目录内容
+    - name: List current directory
+      run: ls -alh
 
-      # 列出 dist 目录内容
-      - name: List dist directory
-        run: ls -alh ./dist
+    # 列出下载的 artifact 目录
+    - name: Find downloaded artifacts
+      run: find . -type d -name "dist"
 
-      - name: Debugging server connection
-        run: |
-          echo "SERVER_HOST: $SERVER_HOST"
-          echo "SERVER_USER: $SERVER_USER"
-          echo "SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY"
-        env:
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Debugging server connection
+      run: |
+        echo "SERVER_HOST: $SERVER_HOST"
+        echo "SERVER_USER: $SERVER_USER"
+        echo "SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY"
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to Server via SCP
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key
-          chmod 600 private_key
-          # 使用 scp 传输 dist 目录到服务器
-          scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
-          ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
-          rm private_key
+    - name: Deploy to Server via SCP
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > private_key
+        chmod 600 private_key
+        # 使用 scp 传输 dist 目录到服务器
+        scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
+        ssh -i private_key $SERVER_USER@$SERVER_HOST 'powershell.exe "Restart-Service -Name nginx"'
+        rm private_key
+
 
