@@ -115,7 +115,7 @@ useEventListener(document, 'keypress', ({ code }) => {
         <div class="login-form">
           <img class="avatar" :src="avatar" alt="">
           <h2 class="outline-none">
-            运营平台
+            运营平台1
           </h2>
           <el-form ref="formRef" :model="state" :rules="rules" size="large">
             <el-form-item prop="username">
