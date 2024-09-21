@@ -64,17 +64,16 @@ jobs:
       - name: List current directory
         run: ls -alh
 
-
-      - name: Deploy to Server
-        uses: easingthemes/ssh-deploy@main
+      # 通过 scp 插件将构建产物传输到 Windows 服务器
+      - name: Transfer files to server
+        uses: appleboy/scp-action@v0.1.5
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rlgoDzvc -i --delete"
-          SOURCE: "dist/"
-          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
-          REMOTE_USER: ${{ secrets.SERVER_USER }}
-          TARGET: "C:/website/admin"
-          EXCLUDE: "/dist/, /node_modules/"
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: "dist/"
+          target: "C:/website/admin"
 
       # 确保这些构建文件传输到服务器
       #      - name: Deploy to Server via SCP
