@@ -5,6 +5,7 @@ import { useAppStore } from '@/stores';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 
 const locale = computed(() => {
+  // return 'zhCN' ? zhCn : en;
   return zhCn;
 });
 
