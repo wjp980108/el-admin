@@ -36,7 +36,7 @@ jobs:
 
       # 列出 dist 目录中的文件，确保构建后的产物文件存在
       - name: List dist directory
-        run: ls -alh ./dist
+        run: ls -alh
 
       - name: Upload dist directory
         uses: actions/upload-artifact@v4
