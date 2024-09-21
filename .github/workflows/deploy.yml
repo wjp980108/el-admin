@@ -65,16 +65,16 @@ jobs:
         run: ls -alh
 
 
-      #      - name: Deploy to Server
-      #        uses: easingthemes/ssh-deploy@main
-      #        with:
-      #          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      #          ARGS: "-rlgoDzvc -i --delete"
-      #          SOURCE: "dist/"
-      #          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
-      #          REMOTE_USER: ${{ secrets.SERVER_USER }}
-      #          TARGET: "C:/website/admin"
-      #          EXCLUDE: "/dist/, /node_modules/"
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rlgoDzvc -i --delete"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          TARGET: "C:/website/admin"
+          EXCLUDE: "/dist/, /node_modules/"
 
       # 确保这些构建文件传输到服务器
       #      - name: Deploy to Server via SCP
