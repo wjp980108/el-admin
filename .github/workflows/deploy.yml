@@ -73,7 +73,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: ./dist/
           target: C:/website/admin
-          strip_components: 1
+          strip_components: 2
 
       # 确保这些构建文件传输到服务器
       #      - name: Deploy to Server via SCP
