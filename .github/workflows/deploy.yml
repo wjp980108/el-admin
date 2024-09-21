@@ -71,9 +71,8 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: ./dist
+          source: ./dist/*
           target: C:/website/admin
-          strip_components: 1
 
       # 确保这些构建文件传输到服务器
       #      - name: Deploy to Server via SCP
