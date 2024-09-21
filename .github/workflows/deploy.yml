@@ -21,7 +21,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.pnpm
-          key: v3-pnpm-${{ hashFiles('**/package.json') }}
+          key: v3-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             v3-pnpm-  
 
@@ -31,9 +31,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      # Install pnpm globally via npm
-      - name: Install pnpm
-        run: npm install -g pnpm
+#      # Install pnpm globally via npm
+#      - name: Install pnpm
+#        run: npm install -g pnpm
 
       # Install dependencies using pnpm
       - name: Install dependencies
