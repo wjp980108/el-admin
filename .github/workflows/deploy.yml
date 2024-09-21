@@ -38,14 +38,14 @@ jobs:
       - name: List dist directory
         run: ls -alh ./dist
 
-      - name: Upload dist directory
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: ./dist
-          if-no-files-found: warn
-        env:
-          ACTIONS_STEP_DEBUG: true
+  #      - name: Upload dist directory
+  #        uses: actions/upload-artifact@v4
+  #        with:
+  #          name: dist
+  #          path: ./dist
+  #          if-no-files-found: warn
+  #        env:
+  #          ACTIONS_STEP_DEBUG: true
 
 
   deploy:
@@ -56,28 +56,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 下载构建后的 artifact
-      - name: Download dist files
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: ./dist
+#      # 下载构建后的 artifact
+      #      - name: Download dist files
+      #        uses: actions/download-artifact@v4
+      #        with:
+      #          name: dist
+      #          path: ./dist
 
       # 列出当前目录结构，确认构建后的文件
       - name: List current directory
         run: ls -alh
 
+
+#      - name: Deploy to Server
+      #        uses: easingthemes/ssh-deploy@main
+      #        with:
+      #          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      #          ARGS: "-rlgoDzvc -i --delete"
+      #          SOURCE: "dist/"
+      #          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+      #          REMOTE_USER: ${{ secrets.SERVER_USER }}
+      #          TARGET: "C:/website/admin"
+      #          EXCLUDE: "/dist/, /node_modules/"
+
       # 确保这些构建文件传输到服务器
-      - name: Deploy to Server via SCP
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key
-          chmod 600 private_key
-          # 使用 scp 传输项目根目录下的文件到服务器
-          scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
-          rm private_key
+      #      - name: Deploy to Server via SCP
+      #        env:
+      #          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      #          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+      #          SERVER_USER: ${{ secrets.SERVER_USER }}
+      #        run: |
+      #          echo "$SSH_PRIVATE_KEY" > private_key
+      #          chmod 600 private_key
+      #          # 使用 scp 传输项目根目录下的文件到服务器
+      #          scp -i private_key -o StrictHostKeyChecking=no -r ./dist/* $SERVER_USER@$SERVER_HOST:"C:/website/admin"
+      #          rm private_key
+
 
 
