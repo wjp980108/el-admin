@@ -73,7 +73,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./dist/**/*"
           target: "C:/website/admin"
-          overwrite: true
 
       # 确保这些构建文件传输到服务器
       #      - name: Deploy to Server via SCP
