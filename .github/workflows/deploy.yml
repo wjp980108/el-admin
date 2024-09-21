@@ -16,26 +16,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 使用 pnpm 的全局存储目录作为缓存键
-      - name: Cache pnpm modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm
-          key: v3-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            v3-pnpm-  
+#      # 使用 pnpm 的全局存储目录作为缓存键
+#      - name: Cache pnpm modules
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.pnpm
+#          key: v3-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+#          restore-keys: |
+#            v3-pnpm-
 
       # Set up Node.js environment using .nvmrc
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
-          #node-version-file: '.nvmrc'
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
-#      # Install pnpm globally via npm
-#      - name: Install pnpm
-#        run: npm install -g pnpm
+      # Install pnpm globally via npm
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       # Install dependencies using pnpm
       - name: Install dependencies
