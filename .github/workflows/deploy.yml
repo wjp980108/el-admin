@@ -31,9 +31,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-#      # Install pnpm globally via npm
-#      - name: Install pnpm
-#        run: npm install -g pnpm
+      # Install pnpm globally via npm
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       # Install dependencies using pnpm
       - name: Install dependencies
