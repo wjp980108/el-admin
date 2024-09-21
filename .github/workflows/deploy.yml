@@ -18,6 +18,8 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
+        with:
+          version: latest
 
       # Set up Node.js environment using .nvmrc
       - name: Set up Node.js
@@ -25,6 +27,10 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
+
+#      # Install pnpm globally via npm
+#      - name: Install pnpm
+#        run: npm install -g pnpm
 
       # Install dependencies using pnpm
       - name: Install dependencies
