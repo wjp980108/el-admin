@@ -26,13 +26,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+          # cache: pnpm
 
-      - name: Cache pnpm
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: pnpm-cache-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}    
+      # - name: Cache pnpm
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.pnpm-store
+      #     key: pnpm-cache-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}    
 
       # Install dependencies using pnpm
       - name: Install dependencies
