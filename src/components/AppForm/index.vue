@@ -1,22 +1,12 @@
 <script setup lang="ts">
-import type { ResponsiveValue } from '@/components/AppGrid/interface';
-
 defineOptions({ name: 'AppForm' });
 
 withDefaults(defineProps<Props>(), {
   labelWidth: 'auto',
-  cols: () => ({ xs: 1, sm: 2, md: 2, lg: 3, xl: 4 }),
-  collapsedRows: 1,
-  rowGap: 0,
-  colGap: 15,
 });
 
 interface Props {
   labelWidth?: string | number
-  cols: ResponsiveValue
-  collapsedRows?: number
-  rowGap?: number | ResponsiveValue
-  colGap?: number | ResponsiveValue
   search: () => void
   reset: () => void
 }
@@ -32,7 +22,7 @@ const gridRef = ref();
 
 <template>
   <el-form :label-width="labelWidth">
-    <app-grid ref="gridRef" :cols :collapsed :row-gap="rowGap!" :col-gap="colGap!" :collapsed-rows="collapsedRows!">
+    <app-grid ref="gridRef">
       <slot />
       <app-form-item suffix>
         <app-flex>

@@ -15,11 +15,11 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 interface Props {
-  cols: number | ResponsiveValue
-  rowGap: number | ResponsiveValue
-  colGap: number | ResponsiveValue
-  collapsed: boolean
-  collapsedRows: number
+  cols?: number | ResponsiveValue
+  rowGap?: number | ResponsiveValue
+  colGap?: number | ResponsiveValue
+  collapsed?: boolean
+  collapsedRows?: number
 }
 
 const {
