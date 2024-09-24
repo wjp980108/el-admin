@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    1: typeof import('./../components/AppCertificate/1.vue')['default']
     AppCard: typeof import('./../components/AppCard/index.tsx')['default']
     AppCertificate: typeof import('./../components/AppCertificate/index.vue')['default']
     AppDropdown: typeof import('./../components/AppDropdown/index.vue')['default']

@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
   suffix: false,
 });
 
-interface Props extends FormItemProps {
+interface Props extends Partial<FormItemProps> {
   // 栅格左侧的间隔格数
   offset?: number | ResponsiveValue
   // 栅格占据的列数，为 0 的时候会隐藏

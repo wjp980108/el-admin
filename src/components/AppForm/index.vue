@@ -32,7 +32,7 @@ const gridRef = ref();
 
 <template>
   <el-form :label-width="labelWidth">
-    <app-grid ref="gridRef" :cols :collapsed :row-gap="rowGap" :col-gap="colGap" :collapsed-rows="collapsedRows">
+    <app-grid ref="gridRef" :cols :collapsed :row-gap="rowGap!" :col-gap="colGap!" :collapsed-rows="collapsedRows!">
       <slot />
       <app-form-item suffix>
         <app-flex>
