@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
   collapsedRows: 1,
 });
 
-interface Props {
+export interface Props {
   cols?: number | ResponsiveValue
   rowGap?: number | ResponsiveValue
   colGap?: number | ResponsiveValue

@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import type { Props as AppGridProps } from '@/components/AppGrid/index.vue';
+
 defineOptions({ name: 'AppForm' });
 
 withDefaults(defineProps<Props>(), {
   labelWidth: 'auto',
+  cols: () => ({ xs: 1, sm: 2, md: 2, lg: 3, xl: 4 }),
+  collapsedRows: 1,
+  rowGap: 0,
+  colGap: 15,
 });
 
-interface Props {
+interface Props extends AppGridProps {
   labelWidth?: string | number
   search: () => void
   reset: () => void
@@ -22,9 +28,9 @@ const gridRef = ref();
 
 <template>
   <el-form :label-width="labelWidth">
-    <app-grid ref="gridRef">
+    <app-grid ref="gridRef" :cols :collapsed :row-gap="rowGap" :col-gap="colGap" :collapsed-rows="collapsedRows">
       <slot />
-      <app-form-item suffix>
+      <app-form-item suffix :label-width="labelWidth" label-position="top" :inline-message="false" :show-message="true">
         <app-flex>
           <el-button type="primary" @click="search">
             查询
