@@ -53,7 +53,7 @@ jobs:
 
       # List dist directory to confirm build output
       - name: List dist directory
-        run: ls -alhR
+        run: ls -alh src typings
 
       # Upload dist directory as artifact
       - name: Upload dist directory
